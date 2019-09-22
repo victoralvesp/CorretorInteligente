@@ -5,8 +5,8 @@ import static org.junit.Assert.assertTrue;
 import java.time.LocalDateTime;
 
 import com.bolsafacil.corretorinteligente.fixtures.FixtureDatabase;
-import com.bolsafacil.corretorinteligente.services.MonitorService;
-import com.bolsafacil.corretorinteligente.services.MonitorServiceImpl;
+import com.bolsafacil.corretorinteligente.services.AcoesService;
+import com.bolsafacil.corretorinteligente.services.AcoesServiceImpl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,16 +16,16 @@ import javassist.NotFoundException;
 /**
  * MonitorServiceTests
  */
-public class MonitorServiceTests {
+public class AcoesServiceTests {
 
-    private MonitorService monitorService;
+    private AcoesService monitorService;
     private FixtureDatabase fixtureDB;
 
     @Before
     public void setup() {
         fixtureDB = new FixtureDatabase();
         var monitoramentosRepoMock = fixtureDB.criarMockMonitoramentosRepository();
-        monitorService = new MonitorServiceImpl(monitoramentosRepoMock);
+        monitorService = new AcoesServiceImpl(monitoramentosRepoMock);
     }
 
     @Test
@@ -34,7 +34,7 @@ public class MonitorServiceTests {
         var monitoramento = fixtureDB.criarNovoMonitoramento();
         var dataAtual = LocalDateTime.now();
         // Act
-        var monitoramentoRegistrado = monitorService.registrarMonitoramento(monitoramento);
+        var monitoramentoRegistrado = monitorService.registrarObservacaoDeAcoes(monitoramento);
         // Assert
         assertTrue("message", monitoramentoRegistrado.getDataRegistro().compareTo(dataAtual) >= 0);
     }
@@ -46,7 +46,7 @@ public class MonitorServiceTests {
         fixtureDB.preencherMonitoramentos(qtde);
 
         // Act
-        var monitoramentos = monitorService.listarMonitoramentos();
+        var monitoramentos = monitorService.listarObservacoesRealizadas();
 
         // Assert
         assertTrue("Os monitoramentos não foram listados corretamente", monitoramentos.size() == qtde);
@@ -61,7 +61,7 @@ public class MonitorServiceTests {
         fixtureDB.preencherMonitoramentos(qtde, monitoramentoAlvo);
 
         //Act
-        var monitoramentoBuscado = monitorService.buscarMonitoramento(idAlvo);
+        var monitoramentoBuscado = monitorService.buscar(idAlvo);
 
         //Assert
         assertTrue("Monitoramento buscado não é o mesmo do Alvo", monitoramentoAlvo.equals(monitoramentoBuscado));

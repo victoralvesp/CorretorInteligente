@@ -3,24 +3,24 @@ package com.bolsafacil.corretorinteligente.services;
 import java.util.Collection;
 
 import com.bolsafacil.corretorinteligente.DefinicoesDoServidor;
-import com.bolsafacil.corretorinteligente.domain.Monitoramento;
-import com.bolsafacil.corretorinteligente.repositorios.MonitoramentosRepository;
+import com.bolsafacil.corretorinteligente.domain.ObservacoesDeAcao;
+import com.bolsafacil.corretorinteligente.repositorios.ObservacoesDeAcaoRepository;
 
 import javassist.NotFoundException;
 
 /**
  * MonitorServiceImpl
  */
-public class MonitorServiceImpl implements MonitorService {
+public class AcoesServiceImpl implements AcoesService {
 
-    private final MonitoramentosRepository repository;
+    private final ObservacoesDeAcaoRepository repository;
 
-    public MonitorServiceImpl(MonitoramentosRepository repository) {
+    public AcoesServiceImpl(ObservacoesDeAcaoRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public Monitoramento registrarMonitoramento(Monitoramento monitoramento) {
+    public ObservacoesDeAcao registrarObservacaoDeAcoes(ObservacoesDeAcao monitoramento) {
         var dataAtual = DefinicoesDoServidor.getDataAtual();
         monitoramento.setDataRegistro(dataAtual);
 
@@ -30,7 +30,7 @@ public class MonitorServiceImpl implements MonitorService {
     }
 
     @Override
-    public Collection<Monitoramento> listarMonitoramentos() {
+    public Collection<ObservacoesDeAcao> listarObservacoesRealizadas() {
         
         var monitoramentosSalvos = repository.listar();
 
@@ -38,7 +38,7 @@ public class MonitorServiceImpl implements MonitorService {
     }
 
     @Override
-    public Monitoramento buscarMonitoramento(long id) throws NotFoundException{
+    public ObservacoesDeAcao buscar(long id) throws NotFoundException{
         var monitoramentoBuscado = repository.buscar(id);
 
         if(monitoramentoBuscado == null)

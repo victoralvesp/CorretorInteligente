@@ -13,9 +13,9 @@ import java.util.Random;
 import java.util.Set;
 
 
-import com.bolsafacil.corretorinteligente.domain.AcaoDoMonitoramento;
-import com.bolsafacil.corretorinteligente.domain.Monitoramento;
-import com.bolsafacil.corretorinteligente.repositorios.MonitoramentosRepository;
+import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
+import com.bolsafacil.corretorinteligente.domain.ObservacoesDeAcao;
+import com.bolsafacil.corretorinteligente.repositorios.ObservacoesDeAcaoRepository;
 
 import org.mockito.Mockito;
 
@@ -23,36 +23,36 @@ import org.mockito.Mockito;
  * FixtureDatabase
  */
 public class FixtureDatabase {
-    Set<Monitoramento> monitoramentosSalvos;
+    Set<ObservacoesDeAcao> monitoramentosSalvos;
     Random idGenerator = new Random();
     
     public FixtureDatabase() {
     }
-    public Monitoramento criarNovoMonitoramento() {
+    public ObservacoesDeAcao criarNovoMonitoramento() {
         long id = idGenerator.nextLong();
         return this.criarNovoMonitoramento(id);
     }
 
-    public Monitoramento criarNovoMonitoramento(long id) {
+    public ObservacoesDeAcao criarNovoMonitoramento(long id) {
         var precoVenda = new BigDecimal("11.00");
         var precoCompra = new BigDecimal("10.00");
-        var acaoMonitorada = new AcaoDoMonitoramento("Intel", precoCompra, precoVenda);
+        var acaoMonitorada = new AcaoObservada("Intel", precoCompra, precoVenda);
         var dataDoMonitoramento = LocalDateTime.now();
-        Set<AcaoDoMonitoramento> acoesDoMonitoramento = new HashSet<AcaoDoMonitoramento>(Arrays.asList(acaoMonitorada));
+        Set<AcaoObservada> acoesDoMonitoramento = new HashSet<AcaoObservada>(Arrays.asList(acaoMonitorada));
         
-        return new Monitoramento(acoesDoMonitoramento, dataDoMonitoramento, id);
+        return new ObservacoesDeAcao(acoesDoMonitoramento, dataDoMonitoramento, id);
     }
     
-    public void preencherMonitoramentos(Set<Monitoramento> monitoramentos) {
+    public void preencherMonitoramentos(Set<ObservacoesDeAcao> monitoramentos) {
         monitoramentosSalvos = monitoramentos;
     }
 
     public void preencherMonitoramentos(int qtde) {
-        var monitoramentos = new Monitoramento[] {};
+        var monitoramentos = new ObservacoesDeAcao[] {};
         this.preencherMonitoramentos(qtde, monitoramentos);
     }
 
-    public void preencherMonitoramentos(int qtde, Monitoramento... seed) {
+    public void preencherMonitoramentos(int qtde, ObservacoesDeAcao... seed) {
         var monitoramentos = new ArrayList<>(Arrays.asList(seed));
         for (int i = 0; i < qtde; i++) {
             var monitoramento = criarNovoMonitoramento();
@@ -61,13 +61,13 @@ public class FixtureDatabase {
         monitoramentosSalvos = new HashSet<>(monitoramentos);
     }
 
-    public MonitoramentosRepository criarMockMonitoramentosRepository() {
-        var repoMock = Mockito.mock(MonitoramentosRepository.class);
-        when(repoMock.salvar(any(Monitoramento.class))).then(returnsFirstArg());
+    public ObservacoesDeAcaoRepository criarMockMonitoramentosRepository() {
+        var repoMock = Mockito.mock(ObservacoesDeAcaoRepository.class);
+        when(repoMock.salvar(any(ObservacoesDeAcao.class))).then(returnsFirstArg());
         when(repoMock.listar()).thenAnswer(i -> getMonitoramentosSalvos());
         when(repoMock.buscar(any(Long.class))).thenAnswer(an -> {
             var id = an.getArguments()[0];
-            for(Monitoramento m : getMonitoramentosSalvos()) {
+            for(ObservacoesDeAcao m : getMonitoramentosSalvos()) {
                 if(m.getId().equals(id))
                     return m;
             }
@@ -77,7 +77,7 @@ public class FixtureDatabase {
         return repoMock;
     }
 
-    public Set<Monitoramento> getMonitoramentosSalvos() {
+    public Set<ObservacoesDeAcao> getMonitoramentosSalvos() {
         return monitoramentosSalvos;
     }
 }

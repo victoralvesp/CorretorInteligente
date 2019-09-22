@@ -12,8 +12,8 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "acoes_do_monitoramento")
-public class AcaoDoMonitoramento {
+@Table(name = "acoes_do_evento_de_observacao")
+public class AcaoObservada {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,7 +26,7 @@ public class AcaoDoMonitoramento {
     @Column(nullable = false, name = "preco_venda")
     BigDecimal precoVenda;
 
-    public AcaoDoMonitoramento(String empresa, BigDecimal precoCompra, BigDecimal precoVenda) {
+    public AcaoObservada(String empresa, BigDecimal precoCompra, BigDecimal precoVenda) {
         this.empresa = empresa;
         this.precoCompra = precoCompra;
         this.precoVenda = precoVenda; 
