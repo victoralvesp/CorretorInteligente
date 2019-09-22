@@ -7,39 +7,33 @@ import com.bolsafacil.corretorinteligente.DefinicoesDoServidor;
 import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
 import com.bolsafacil.corretorinteligente.domain.Monitoramento;
 import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
-import com.bolsafacil.corretorinteligente.domain.movimentacoes.MovimentacaoDeCompraDeAcoes;
+import com.bolsafacil.corretorinteligente.domain.movimentacoes.MovimentacaoDeVendaDeAcoes;
 
 /**
- * RegraDeCompra
+ * RegraDeVenda
  */
-public class RegraDeCompra implements RegraDeNegociacao {
-
-    /**
-     *
-     */
+public class RegraDeVenda implements RegraDeNegociacao {
 
     private static final RoundingMode modoArredondamento = RoundingMode.DOWN;
-    /**
-     *
-     */
 
-    private final BigDecimal saldoDisponivel;
+    private final BigDecimal quantidadeDeAcoesDisponivel;
     private final Monitoramento monitoramentoDaRegra;
 
-    public RegraDeCompra(Monitoramento monitoramentoDaRegra, BigDecimal saldoDisponivel) {
+    public RegraDeVenda(Monitoramento monitoramentoDaRegra, BigDecimal quantidadeDeAcoesDisponivel) {
+        this.quantidadeDeAcoesDisponivel = quantidadeDeAcoesDisponivel;
         this.monitoramentoDaRegra = monitoramentoDaRegra;
-        this.saldoDisponivel = saldoDisponivel;
     }
+
 
     @Override
     public MovimentacaoDeConta aplicarRegra(AcaoObservada acaoObservada) {
-        var precoCompraObservado = acaoObservada.getPrecoCompra();
+        var precoVendaObservado = acaoObservada.getPrecoVenda();
 
         var empresaObservaIgualAMonitorada = monitoramentoDaRegra.getEmpresa().equals(acaoObservada.getEmpresa());
-        if (empresaObservaIgualAMonitorada && estaAbaixoDoDesejado(precoCompraObservado)) {
-            var quantidadeDeAcoesAComprar = saldoDisponivel.divide(precoCompraObservado, modoArredondamento).setScale(2, modoArredondamento);
-            var dataDaCompra = DefinicoesDoServidor.getDataAtual();
-            var movimentacaoDeCompra = new MovimentacaoDeCompraDeAcoes(quantidadeDeAcoesAComprar, dataDaCompra);
+        if (empresaObservaIgualAMonitorada && estaAcimaDoDesejado(precoVendaObservado)) {
+            var valorTotalVendido = quantidadeDeAcoesDisponivel.multiply(precoVendaObservado).setScale(2, modoArredondamento);
+            var dataDaVenda = DefinicoesDoServidor.getDataAtual();
+            var movimentacaoDeCompra = new MovimentacaoDeVendaDeAcoes(valorTotalVendido, dataDaVenda);
 
             return movimentacaoDeCompra;
         } else {
@@ -47,8 +41,7 @@ public class RegraDeCompra implements RegraDeNegociacao {
         }
 
     }
-
-    private boolean estaAbaixoDoDesejado(BigDecimal precoCompraObservado) {
+    private boolean estaAcimaDoDesejado(BigDecimal precoCompraObservado) {
         var precoDesejado = monitoramentoDaRegra.getPrecoCompra();
         return precoCompraObservado.compareTo(precoDesejado) <= 0;
     }
