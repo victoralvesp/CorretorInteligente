@@ -28,12 +28,36 @@ public class Monitoramento {
     @Column(nullable = false, name = "data_registro")
     LocalDateTime dataRegistro;
 
+    @Column
+    Boolean excluido;
+
 
     public Monitoramento(Set<AcaoDoMonitoramento> acoesMonitoradas, LocalDateTime data) {
+        this(acoesMonitoradas, data, 0);
+    }
+    public Monitoramento(Set<AcaoDoMonitoramento> acoesMonitoradas, LocalDateTime data, long id) {
         this.acoesMonitoradas = acoesMonitoradas;
         this.data = data;
+        this.id = id;
     }        
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        var other = (Monitoramento) obj;
+
+        return id == other.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 
     /**
      * @return as acoes monitoradas nesse monitoramento

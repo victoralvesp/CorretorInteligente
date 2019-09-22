@@ -1,5 +1,7 @@
 package com.bolsafacil.corretorinteligente.repositorios;
 
+import java.util.Collection;
+
 import com.bolsafacil.corretorinteligente.domain.Monitoramento;
 
 /**
@@ -8,4 +10,8 @@ import com.bolsafacil.corretorinteligente.domain.Monitoramento;
 public interface MonitoramentosRepository {
 
     public Monitoramento salvar(Monitoramento monitoramento);
+
+    public Collection<Monitoramento> listar();
+
+    public Monitoramento buscar(long id);
 }

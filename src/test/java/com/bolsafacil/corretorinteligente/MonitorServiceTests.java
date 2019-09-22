@@ -1,25 +1,17 @@
 package com.bolsafacil.corretorinteligente;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
-import com.bolsafacil.corretorinteligente.domain.AcaoDoMonitoramento;
-import com.bolsafacil.corretorinteligente.domain.Monitoramento;
-import com.bolsafacil.corretorinteligente.repositorios.MonitoramentosRepository;
+import com.bolsafacil.corretorinteligente.fixtures.FixtureDatabase;
 import com.bolsafacil.corretorinteligente.services.MonitorService;
 import com.bolsafacil.corretorinteligente.services.MonitorServiceImpl;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
+
+import javassist.NotFoundException;
 
 /**
  * MonitorServiceTests
@@ -27,39 +19,52 @@ import org.mockito.Mockito;
 public class MonitorServiceTests {
 
     private MonitorService monitorService;
+    private FixtureDatabase fixtureDB;
 
     @Before
     public void setup() {
-        var monitoramentosRepoMock = criarMockMonitoramentosRepository();
+        fixtureDB = new FixtureDatabase();
+        var monitoramentosRepoMock = fixtureDB.criarMockMonitoramentosRepository();
         monitorService = new MonitorServiceImpl(monitoramentosRepoMock);
     }
 
     @Test
     public void monitoramentoDeveSerSalvoComDataDeRegistroAtual() {
-        //Arrange
-        var monitoramento = criarNovoMonitoramento();
+        // Arrange
+        var monitoramento = fixtureDB.criarNovoMonitoramento();
         var dataAtual = LocalDateTime.now();
-        //Act 
+        // Act
         var monitoramentoRegistrado = monitorService.registrarMonitoramento(monitoramento);
+        // Assert
+        assertTrue("message", monitoramentoRegistrado.getDataRegistro().compareTo(dataAtual) >= 0);
+    }
+
+    @Test
+    public void deveListarMonitoramentosSalvos() {
+        // Arrange
+        int qtde = 10;
+        fixtureDB.preencherMonitoramentos(qtde);
+
+        // Act
+        var monitoramentos = monitorService.listarMonitoramentos();
+
+        // Assert
+        assertTrue("Os monitoramentos não foram listados corretamente", monitoramentos.size() == qtde);
+    }
+
+    @Test
+    public void deveObterApenasMonitoramentoBuscado() throws NotFoundException {
+        //Arrange
+        int qtde = 10;
+        var monitoramentoAlvo = fixtureDB.criarNovoMonitoramento();
+        var idAlvo = monitoramentoAlvo.getId();
+        fixtureDB.preencherMonitoramentos(qtde, monitoramentoAlvo);
+
+        //Act
+        var monitoramentoBuscado = monitorService.buscarMonitoramento(idAlvo);
+
         //Assert
-        assertTrue("message", monitoramentoRegistrado.getDataRegistro().compareTo(dataAtual) >= 0 );
+        assertTrue("Monitoramento buscado não é o mesmo do Alvo", monitoramentoAlvo.equals(monitoramentoBuscado));
     }
 
-
-
-    private Monitoramento criarNovoMonitoramento() {
-        var precoVenda = new BigDecimal("11.00");
-        var precoCompra = new BigDecimal("10.00");
-        var acaoMonitorada = new AcaoDoMonitoramento("Intel", precoCompra, precoVenda);
-        var dataDoMonitoramento = LocalDateTime.now();
-        Set<AcaoDoMonitoramento> acoesDoMonitoramento = new HashSet<AcaoDoMonitoramento>(Arrays.asList(acaoMonitorada));
-
-        return new Monitoramento(acoesDoMonitoramento, dataDoMonitoramento);
-    }
-
-    private MonitoramentosRepository criarMockMonitoramentosRepository() {
-        var repoMock = Mockito.mock(MonitoramentosRepository.class);
-        when(repoMock.salvar(any(Monitoramento.class))).then(returnsFirstArg());
-        return repoMock;
-    }
 }
