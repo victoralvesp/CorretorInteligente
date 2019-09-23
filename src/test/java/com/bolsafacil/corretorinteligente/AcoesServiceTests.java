@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 import com.bolsafacil.corretorinteligente.fixtures.FixtureObservacoes;
 import com.bolsafacil.corretorinteligente.services.AcoesService;
-import com.bolsafacil.corretorinteligente.services.AcoesServiceImpl;
+import com.bolsafacil.corretorinteligente.services.implementacoes.AcoesServiceImpl;
 
 import org.junit.Before;
 import org.junit.Test;

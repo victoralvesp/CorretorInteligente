@@ -17,7 +17,7 @@ public class AcaoObservada {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    long id;
 
     @Column(nullable = false)
     String empresa;    
@@ -36,7 +36,7 @@ public class AcaoObservada {
     /**
      * @return o id
      */
-    public Long getId() {
+    public long getId() {
         return id;
     }
     /**

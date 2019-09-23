@@ -26,7 +26,8 @@ public class FixtureMonitoramentos {
     private final Random idGenerator = new Random();
 
     public Monitoramento criarNovoMonitoramento() {
-        String empresa = "Intel" + idGenerator.nextInt(10000);
+        int id = idGenerator.nextInt(10000);
+        String empresa = "Intel" + id;
         return this.criarNovoMonitoramento(empresa);
     }
 
@@ -42,9 +43,9 @@ public class FixtureMonitoramentos {
         this.preencherMonitoramentos(qtde, monitoramentos);
     }
 
-    public void preencherMonitoramentos(int qtde, Monitoramento... seed) {
+    public void preencherMonitoramentos(int qtdeDeEntradas, Monitoramento... seed) {
         var monitoramentos = new ArrayList<>(Arrays.asList(seed));
-        for (int i = 0; i < qtde; i++) {
+        for (int i = 0; i < qtdeDeEntradas; i++) {
             var monitoramento = criarNovoMonitoramento();
             monitoramentos.add(monitoramento);
         }
@@ -53,9 +54,16 @@ public class FixtureMonitoramentos {
 
     public MonitoramentosRepository criarMockMonitoramentosRepository() {
         var repoMock = Mockito.mock(MonitoramentosRepository.class);
-        when(repoMock.salvar(any(Monitoramento.class))).then(returnsFirstArg());
+        when(repoMock.incluir(any(Monitoramento.class))).thenAnswer(monArg -> adicionarMonitoramento(monArg.getArguments()[0]));
+
         when(repoMock.listar()).thenAnswer(i -> getMonitoramentosSalvos());
 
+        when(repoMock.alterarParaExcluido(any(Monitoramento.class))).thenAnswer(an -> {
+            var monitoramento = (Monitoramento) an.getArguments()[0];
+
+            monitoramento.setExcluido(true);
+            return monitoramento;
+        });
         when(repoMock.buscar(any(String.class))).thenAnswer(an -> {
             var empresa = an.getArguments()[0];
             for(Monitoramento m : getMonitoramentosSalvos()) {
@@ -69,6 +77,14 @@ public class FixtureMonitoramentos {
         return repoMock;
     }
  
+    private Monitoramento adicionarMonitoramento(Object object) {
+        var monitoramentoAAdicionar = (Monitoramento) object;
+
+        monitoramentosSalvos.add(monitoramentoAAdicionar);
+
+        return monitoramentoAAdicionar;
+    }
+
     public Set<Monitoramento> getMonitoramentosSalvos() {
         return monitoramentosSalvos;
     }

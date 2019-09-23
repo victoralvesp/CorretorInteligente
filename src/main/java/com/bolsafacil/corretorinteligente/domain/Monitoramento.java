@@ -14,7 +14,7 @@ public class Monitoramento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    long id;
 
     @Column(nullable = false)
     String empresa;    
@@ -23,8 +23,8 @@ public class Monitoramento {
     @Column(nullable = false, name = "preco_venda")
     BigDecimal precoVenda;
 
-    @Column
-    Boolean excluido;
+    @Column(nullable = false)
+    boolean excluido;
 
     @Override
     public boolean equals(Object obj) {
@@ -38,15 +38,23 @@ public class Monitoramento {
         return empresa.equals(other.getEmpresa());
     }
 
+    public Monitoramento(String empresa, BigDecimal precoCompra, BigDecimal precoVenda, long id) {
+        this.empresa = empresa;
+        this.precoCompra = precoCompra;
+        this.precoVenda = precoVenda; 
+        this.id = id;
+    }
+    
     public Monitoramento(String empresa, BigDecimal precoCompra, BigDecimal precoVenda) {
         this.empresa = empresa;
         this.precoCompra = precoCompra;
         this.precoVenda = precoVenda; 
     }
+
     /**
      * @return o id
      */
-    public Long getId() {
+    public long getId() {
         return id;
     }
     /**
@@ -68,5 +76,19 @@ public class Monitoramento {
      */
     public BigDecimal getPrecoVenda() {
         return precoVenda;
+    }
+
+    /**
+     * @return valor indicando se o monitoramento foi excluido
+     */
+    public boolean getExcluido() {
+        return excluido;
+    }
+
+    /**
+     * @param excluido valor indicando se o monitoramento foi excluido
+     */
+    public void setExcluido(boolean excluido) {
+        this.excluido = excluido;
     }
 }

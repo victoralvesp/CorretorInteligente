@@ -68,7 +68,7 @@ public class FixtureObservacoes {
         when(repoMock.buscar(any(Long.class))).thenAnswer(an -> {
             var id = an.getArguments()[0];
             for(ObservacaoDeAcoes m : getMonitoramentosSalvos()) {
-                if(m.getId().equals(id))
+                if(id != null && id.equals(m.getId()))
                     return m;
             }
             return null;

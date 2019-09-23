@@ -16,7 +16,7 @@ import javax.persistence.Table;
 public class ObservacaoDeAcoes {
 
     @Id
-    Long id;
+    long id;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_evento_observacao")
@@ -29,7 +29,7 @@ public class ObservacaoDeAcoes {
     LocalDateTime dataRegistro;
 
     @Column
-    Boolean excluido;
+    boolean excluido;
 
 
     public ObservacaoDeAcoes(Set<AcaoObservada> acoesMonitoradas, LocalDateTime data) {
@@ -56,7 +56,7 @@ public class ObservacaoDeAcoes {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Long.valueOf(id).hashCode();
     }
 
     /**
@@ -88,7 +88,7 @@ public class ObservacaoDeAcoes {
     /**
      * @return o id
      */
-    public Long getId() {
+    public long getId() {
         return id;
     }
     

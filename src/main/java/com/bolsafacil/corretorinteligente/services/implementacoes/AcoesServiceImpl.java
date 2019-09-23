@@ -1,10 +1,11 @@
-package com.bolsafacil.corretorinteligente.services;
+package com.bolsafacil.corretorinteligente.services.implementacoes;
 
 import java.util.Collection;
 
 import com.bolsafacil.corretorinteligente.DefinicoesDoServidor;
 import com.bolsafacil.corretorinteligente.domain.ObservacaoDeAcoes;
 import com.bolsafacil.corretorinteligente.repositorios.ObservacoesDeAcaoRepository;
+import com.bolsafacil.corretorinteligente.services.AcoesService;
 
 import javassist.NotFoundException;
 
