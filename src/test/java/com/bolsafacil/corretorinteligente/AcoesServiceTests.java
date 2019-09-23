@@ -4,7 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
 
-import com.bolsafacil.corretorinteligente.fixtures.FixtureDatabase;
+import com.bolsafacil.corretorinteligente.fixtures.FixtureObservacoes;
 import com.bolsafacil.corretorinteligente.services.AcoesService;
 import com.bolsafacil.corretorinteligente.services.AcoesServiceImpl;
 
@@ -19,19 +19,19 @@ import javassist.NotFoundException;
 public class AcoesServiceTests {
 
     private AcoesService monitorService;
-    private FixtureDatabase fixtureDB;
+    private FixtureObservacoes fixtureDB;
 
     @Before
     public void setup() {
-        fixtureDB = new FixtureDatabase();
+        fixtureDB = new FixtureObservacoes();
         var monitoramentosRepoMock = fixtureDB.criarMockMonitoramentosRepository();
         monitorService = new AcoesServiceImpl(monitoramentosRepoMock);
     }
 
     @Test
-    public void monitoramentoDeveSerSalvoComDataDeRegistroAtual() {
+    public void observacaoDeveSerSalvaComDataDeRegistroAtual() {
         // Arrange
-        var monitoramento = fixtureDB.criarNovoMonitoramento();
+        var monitoramento = fixtureDB.criarNovaObservacao();
         var dataAtual = LocalDateTime.now();
         // Act
         var monitoramentoRegistrado = monitorService.registrarObservacaoDeAcoes(monitoramento);
@@ -40,10 +40,10 @@ public class AcoesServiceTests {
     }
 
     @Test
-    public void deveListarMonitoramentosSalvos() {
+    public void deveListarObservacoesSalvas() {
         // Arrange
         int qtde = 10;
-        fixtureDB.preencherMonitoramentos(qtde);
+        fixtureDB.preencherObservacoes(qtde);
 
         // Act
         var monitoramentos = monitorService.listarObservacoesRealizadas();
@@ -56,9 +56,9 @@ public class AcoesServiceTests {
     public void deveObterApenasMonitoramentoBuscado() throws NotFoundException {
         //Arrange
         int qtde = 10;
-        var monitoramentoAlvo = fixtureDB.criarNovoMonitoramento();
+        var monitoramentoAlvo = fixtureDB.criarNovaObservacao();
         var idAlvo = monitoramentoAlvo.getId();
-        fixtureDB.preencherMonitoramentos(qtde, monitoramentoAlvo);
+        fixtureDB.preencherObservacoes(qtde, monitoramentoAlvo);
 
         //Act
         var monitoramentoBuscado = monitorService.buscar(idAlvo);

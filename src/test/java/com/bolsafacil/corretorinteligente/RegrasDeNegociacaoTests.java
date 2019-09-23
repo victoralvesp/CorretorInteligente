@@ -7,10 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.math.BigDecimal;
 
 import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
-import com.bolsafacil.corretorinteligente.domain.Monitoramento;
-import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeCompra;
-import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeNegociacao;
-import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeVenda;
+import com.bolsafacil.corretorinteligente.fixtures.FixtureRegras;
 
 import org.junit.Test;
 
@@ -23,7 +20,8 @@ public class RegrasDeNegociacaoTests {
     public void regraDeCompraDeveGerarMovimentacaoParaAcaoDeMonitoramentoComValorApropriado() {
         //Arrange
         String empresa = "Intel";
-        var regraDeCompraExemplo = criarRegraDeCompra(empresa);
+        var fixtureRegra = new FixtureRegras();
+        var regraDeCompraExemplo = fixtureRegra.criarRegraDeCompra(empresa);
         var acaoMonitorada = criarAcaoObservada(empresa);
 
         // Act
@@ -32,24 +30,11 @@ public class RegrasDeNegociacaoTests {
         assertNotNull(movimentacaoGerada);
     }
 
-    private AcaoObservada criarAcaoObservada(String empresa) {
-        var precoCompraObservado = new BigDecimal("8.90");
-        var precoVendaObservado = new BigDecimal("9.50");
-        var acaoMonitorada = new AcaoObservada(empresa, precoCompraObservado, precoVendaObservado);
-        return acaoMonitorada;
-    }
-
-    private Monitoramento criarMonitoramento(String empresa) {
-        var precoCompra = new BigDecimal("10.00");
-        var precoVenda = new BigDecimal("11.00");
-        var monitoramentoDoExemplo = new Monitoramento(empresa, precoCompra, precoVenda);
-        return monitoramentoDoExemplo;
-    }
-
     @Test
     public void regraDeCompraDeveComprarQuantidadeConformeExemplo() {
         String empresa = "Intel";
-        var regraDeCompraExemplo = criarRegraDeCompra(empresa);
+        var fixtureRegra = new FixtureRegras();
+        var regraDeCompraExemplo = fixtureRegra.criarRegraDeCompra(empresa);
         var acaoMonitorada = criarAcaoObservada(empresa);
 
         // Act
@@ -66,7 +51,8 @@ public class RegrasDeNegociacaoTests {
     public void regraDeCompraNaoDeveSerAplicadaParaEmpresaNaoMonitarada() {
         String empresaObservada = "Microsoft";
         String empresaMonitorada = "Intel";
-        var regraDeCompraExemplo = criarRegraDeCompra(empresaMonitorada);
+        var fixtureRegra = new FixtureRegras();
+        var regraDeCompraExemplo = fixtureRegra.criarRegraDeCompra(empresaMonitorada);
         var acaoMonitorada = criarAcaoObservada(empresaObservada);
 
         // Act
@@ -82,7 +68,8 @@ public class RegrasDeNegociacaoTests {
     public void regraDeVendaDeveGerarMovimentacaoParaAcaoDeMonitoramentoComValorApropriado() {
         //Arrange
         String empresa = "Intel";
-        var regraDeVendaExemplo = criarRegraDeVenda(empresa);
+        var fixtureRegra = new FixtureRegras();
+        var regraDeVendaExemplo = fixtureRegra.criarRegraDeVenda(empresa);
         var acaoMonitorada = criarAcaoObservada(empresa);
 
         // Act
@@ -94,7 +81,8 @@ public class RegrasDeNegociacaoTests {
     @Test
     public void regraDeVendaDeveVenderQuantidadeConformeExemplo() {
         String empresa = "Intel";
-        var regraDeVendaExemplo = criarRegraDeVenda(empresa);
+        var fixtureRegra = new FixtureRegras();
+        var regraDeVendaExemplo = fixtureRegra.criarRegraDeVenda(empresa);
         var acaoMonitorada = criarAcaoObservada(empresa);
 
         // Act
@@ -111,7 +99,8 @@ public class RegrasDeNegociacaoTests {
     public void regraDeVendaNaoDeveSerAplicadaParaEmpresaNaoMonitarada() {
         String empresaObservada = "Microsoft";
         String empresaMonitorada = "Intel";
-        var regraDeVendaExemplo = criarRegraDeVenda(empresaMonitorada);
+        var fixtureRegra = new FixtureRegras();
+        var regraDeVendaExemplo = fixtureRegra.criarRegraDeVenda(empresaMonitorada);
         var acaoMonitorada = criarAcaoObservada(empresaObservada);
 
         // Act
@@ -122,19 +111,11 @@ public class RegrasDeNegociacaoTests {
 
     }
     
+    private AcaoObservada criarAcaoObservada(String empresa) {
+        var precoCompraObservado = new BigDecimal("8.90");
+        var precoVendaObservado = new BigDecimal("9.50");
+        var acaoMonitorada = new AcaoObservada(empresa, precoCompraObservado, precoVendaObservado);
+        return acaoMonitorada;
+    }
     
-
-    private RegraDeNegociacao criarRegraDeVenda(String empresa) {
-        var monitoramentoDoExemplo = criarMonitoramento(empresa);
-        var saldoDaAcaoMonitoradaDisponivel = new BigDecimal("1123.59");
-        var regraDeVendaExemplo = new RegraDeVenda(monitoramentoDoExemplo, saldoDaAcaoMonitoradaDisponivel);
-        return regraDeVendaExemplo;
-    }
-
-    private RegraDeNegociacao criarRegraDeCompra(String empresa) {
-        var monitoramentoDoExemplo = criarMonitoramento(empresa);
-        var saldoDisponivel = new BigDecimal("10000.00");
-        var regraDeCompraExemplo = new RegraDeCompra(monitoramentoDoExemplo, saldoDisponivel);
-        return regraDeCompraExemplo;
-    }
 }

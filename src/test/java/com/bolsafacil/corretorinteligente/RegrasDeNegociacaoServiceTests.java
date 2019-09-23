@@ -2,7 +2,7 @@ package com.bolsafacil.corretorinteligente;
 
 import static org.junit.Assert.assertTrue;
 
-import com.bolsafacil.corretorinteligente.fixtures.FixtureDatabase;
+import com.bolsafacil.corretorinteligente.fixtures.FixtureObservacoes;
 import com.bolsafacil.corretorinteligente.services.RegrasDeNegociacaoService;
 
 import org.junit.Test;
@@ -16,8 +16,8 @@ public class RegrasDeNegociacaoServiceTests {
     public void deveAplicarRegraDeCompraAMonitoramentoAcimaDaRegra() {
         //Arrange
         RegrasDeNegociacaoService regrasDeNegociacaoService = null;
-        var fixtureDB = new FixtureDatabase();
-        var monitoramento = fixtureDB.criarNovoMonitoramento();
+        var fixtureDB = new FixtureObservacoes();
+        var monitoramento = fixtureDB.criarNovaObservacao();
         
         //Act
         var movimentacoesDeAcoesGeradas = regrasDeNegociacaoService.aplicarRegrasDeNegociacao(monitoramento);

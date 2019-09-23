@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "eventos_de_observacao_de_acoes")
-public class ObservacoesDeAcao {
+public class ObservacaoDeAcoes {
 
     @Id
     Long id;
@@ -32,10 +32,10 @@ public class ObservacoesDeAcao {
     Boolean excluido;
 
 
-    public ObservacoesDeAcao(Set<AcaoObservada> acoesMonitoradas, LocalDateTime data) {
+    public ObservacaoDeAcoes(Set<AcaoObservada> acoesMonitoradas, LocalDateTime data) {
         this(acoesMonitoradas, data, 0);
     }
-    public ObservacoesDeAcao(Set<AcaoObservada> acoesMonitoradas, LocalDateTime data, long id) {
+    public ObservacaoDeAcoes(Set<AcaoObservada> acoesMonitoradas, LocalDateTime data, long id) {
         this.acoesObservadas = acoesMonitoradas;
         this.data = data;
         this.id = id;
@@ -49,7 +49,7 @@ public class ObservacoesDeAcao {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        var other = (ObservacoesDeAcao) obj;
+        var other = (ObservacaoDeAcoes) obj;
 
         return id == other.getId();
     }

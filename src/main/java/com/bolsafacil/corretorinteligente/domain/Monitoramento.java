@@ -23,6 +23,21 @@ public class Monitoramento {
     @Column(nullable = false, name = "preco_venda")
     BigDecimal precoVenda;
 
+    @Column
+    Boolean excluido;
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj)
+            return true;
+
+        if(obj == null || obj.getClass() != this.getClass())
+            return false;
+
+        var other = (Monitoramento) obj;
+        return empresa.equals(other.getEmpresa());
+    }
+
     public Monitoramento(String empresa, BigDecimal precoCompra, BigDecimal precoVenda) {
         this.empresa = empresa;
         this.precoCompra = precoCompra;

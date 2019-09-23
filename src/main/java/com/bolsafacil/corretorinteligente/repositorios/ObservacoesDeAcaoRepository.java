@@ -2,16 +2,16 @@ package com.bolsafacil.corretorinteligente.repositorios;
 
 import java.util.Collection;
 
-import com.bolsafacil.corretorinteligente.domain.ObservacoesDeAcao;
+import com.bolsafacil.corretorinteligente.domain.ObservacaoDeAcoes;
 
 /**
  * MonitoramentosRepository
  */
 public interface ObservacoesDeAcaoRepository {
 
-    public ObservacoesDeAcao salvar(ObservacoesDeAcao monitoramento);
+    public ObservacaoDeAcoes salvar(ObservacaoDeAcoes monitoramento);
 
-    public Collection<ObservacoesDeAcao> listar();
+    public Collection<ObservacaoDeAcoes> listar();
 
-    public ObservacoesDeAcao buscar(long id);
+    public ObservacaoDeAcoes buscar(long id);
 }

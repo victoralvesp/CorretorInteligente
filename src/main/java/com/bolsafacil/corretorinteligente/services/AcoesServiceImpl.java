@@ -3,7 +3,7 @@ package com.bolsafacil.corretorinteligente.services;
 import java.util.Collection;
 
 import com.bolsafacil.corretorinteligente.DefinicoesDoServidor;
-import com.bolsafacil.corretorinteligente.domain.ObservacoesDeAcao;
+import com.bolsafacil.corretorinteligente.domain.ObservacaoDeAcoes;
 import com.bolsafacil.corretorinteligente.repositorios.ObservacoesDeAcaoRepository;
 
 import javassist.NotFoundException;
@@ -20,7 +20,7 @@ public class AcoesServiceImpl implements AcoesService {
     }
 
     @Override
-    public ObservacoesDeAcao registrarObservacaoDeAcoes(ObservacoesDeAcao monitoramento) {
+    public ObservacaoDeAcoes registrarObservacaoDeAcoes(ObservacaoDeAcoes monitoramento) {
         var dataAtual = DefinicoesDoServidor.getDataAtual();
         monitoramento.setDataRegistro(dataAtual);
 
@@ -30,7 +30,7 @@ public class AcoesServiceImpl implements AcoesService {
     }
 
     @Override
-    public Collection<ObservacoesDeAcao> listarObservacoesRealizadas() {
+    public Collection<ObservacaoDeAcoes> listarObservacoesRealizadas() {
         
         var monitoramentosSalvos = repository.listar();
 
@@ -38,7 +38,7 @@ public class AcoesServiceImpl implements AcoesService {
     }
 
     @Override
-    public ObservacoesDeAcao buscar(long id) throws NotFoundException{
+    public ObservacaoDeAcoes buscar(long id) throws NotFoundException{
         var monitoramentoBuscado = repository.buscar(id);
 
         if(monitoramentoBuscado == null)
