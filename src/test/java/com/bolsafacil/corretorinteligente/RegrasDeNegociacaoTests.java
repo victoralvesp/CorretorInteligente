@@ -41,7 +41,7 @@ public class RegrasDeNegociacaoTests {
         var movimentacaoGerada = regraDeCompraExemplo.aplicarRegra(acaoMonitorada);
         // Assert
         var quantidadeCompradaExemplo = new BigDecimal("1123.59");
-        Number valorMovimentado = movimentacaoGerada.getValorMovimentado();
+        Number valorMovimentado = movimentacaoGerada.getQuantidadeDeAcoesMovimentada();
         var message = "Quantidade esperada: " + quantidadeCompradaExemplo + " Quantidade calculada: " + valorMovimentado;
         assertTrue(message, valorMovimentado.equals(quantidadeCompradaExemplo));
 

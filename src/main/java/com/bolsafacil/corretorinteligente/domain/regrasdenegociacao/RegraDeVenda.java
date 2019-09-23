@@ -29,11 +29,13 @@ public class RegraDeVenda implements RegraDeNegociacao {
     public MovimentacaoDeConta aplicarRegra(AcaoObservada acaoObservada) {
         var precoVendaObservado = acaoObservada.getPrecoVenda();
 
-        var empresaObservaIgualAMonitorada = monitoramentoDaRegra.getEmpresa().equals(acaoObservada.getEmpresa());
+        String empresaDaAcao = acaoObservada.getEmpresa();
+        var empresaObservaIgualAMonitorada = monitoramentoDaRegra.getEmpresa().equals(empresaDaAcao);
         if (empresaObservaIgualAMonitorada && estaAcimaDoDesejado(precoVendaObservado)) {
             var valorTotalVendido = quantidadeDeAcoesDisponivel.multiply(precoVendaObservado).setScale(2, modoArredondamento);
             var dataDaVenda = DefinicoesDoServidor.getDataAtual();
-            var movimentacaoDeCompra = new MovimentacaoDeVendaDeAcoes(valorTotalVendido, dataDaVenda);
+            var quantidadeMovimentada = quantidadeDeAcoesDisponivel.multiply(new BigDecimal(-1));
+            var movimentacaoDeCompra = new MovimentacaoDeVendaDeAcoes(valorTotalVendido, dataDaVenda, quantidadeMovimentada, empresaDaAcao);
 
             return movimentacaoDeCompra;
         } else {
