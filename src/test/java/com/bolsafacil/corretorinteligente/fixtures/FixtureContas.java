@@ -15,19 +15,27 @@ public class FixtureContas {
 
     
     public MovimentacaoDeConta criarVendaComValorDe(String val) {
+        var empresa = "Intel";
+        return criarVendaComValorDe(val, empresa);
+    }
+
+    public MovimentacaoDeConta criarVendaComValorDe(String val, String empresa) {
         var valorVendido = new BigDecimal(val);
         var data = LocalDateTime.now();
         var quantidade = new BigDecimal("10");
-        var empresa = "Intel";
         var movimentacao = new MovimentacaoDeVendaDeAcoes(valorVendido, data, quantidade, empresa);
         return movimentacao;
     }
 
     public MovimentacaoDeConta criarCompraComValorDe(String val) {
+        var empresa = "Intel";
+        return criarCompraComValorDe(val, empresa);
+    }
+
+    public MovimentacaoDeConta criarCompraComValorDe(String val, String empresa) {
         var valorVendido = new BigDecimal(val);
         var data = LocalDateTime.now();
         var quantidade = new BigDecimal("10");
-        var empresa = "Intel";
         var movimentacao = new MovimentacaoDeCompraDeAcoes(valorVendido, data, quantidade, empresa);
         return movimentacao;
     }

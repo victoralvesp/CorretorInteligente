@@ -11,20 +11,20 @@ import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
 /**
  * ContaImpl
  */
-public class ContaImpl implements Conta {
+public abstract class ContaBase implements Conta {
 
     LocalDateTime dataUltimaAtualizacaoSalva;
 
     BigDecimal saldoDisponivelInicial;
 
-    private BigDecimal saldoMovimentacoes;
-    private List<MovimentacaoDeConta> movimentacoesRegistradas = new ArrayList<MovimentacaoDeConta>();
+    protected BigDecimal saldoMovimentacoes;
+    protected List<MovimentacaoDeConta> movimentacoesRegistradas = new ArrayList<MovimentacaoDeConta>();
 
-    public ContaImpl(BigDecimal saldoInicial) {
+    public ContaBase(BigDecimal saldoInicial) {
         this(saldoInicial, LocalDateTime.MIN);
     }
 
-    public ContaImpl(BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva) {
+    public ContaBase(BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva) {
         saldoDisponivelInicial = saldoInicial;
         saldoMovimentacoes = new BigDecimal("0");
         this.dataUltimaAtualizacaoSalva = dataUltimaAtualizacaoSalva;
@@ -41,39 +41,38 @@ public class ContaImpl implements Conta {
             return;
 
         for (MovimentacaoDeConta movimentacao : movimentacoes) {
+            if(movimentacaoAlteraEstaConta(movimentacao)) {
 
-            var tipoMovimentacao = movimentacao.getTipoMovimentacao();
-            if(tipoMovimentacao == null) {
-                registrarMovimentacaoSemAlterarSaldo(movimentacao);
-            }
-            else {
-                switch (tipoMovimentacao) {
-                    case COMPRA:
-                    subtrairSaldoMovimentacao(movimentacao);
-                    break;
-                    case VENDA:
-                    adicionarSaldoMovimentacao(movimentacao);
-                    default:
+                var tipoMovimentacao = movimentacao.getTipoMovimentacao();
+                if(tipoMovimentacao == null) {
                     registrarMovimentacaoSemAlterarSaldo(movimentacao);
-                    break;
                 }
-            }            
+                else {
+                    switch (tipoMovimentacao) {
+                        case COMPRA:
+                        registrarMovimentacaoDeCompra(movimentacao);
+                        break;
+                        case VENDA:
+                        registrarMovimentacaoDeVenda(movimentacao);
+                        default:
+                        registrarMovimentacaoSemAlterarSaldo(movimentacao);
+                        break;
+                    }
+                }            
+            }
         }
     }
+
+    protected abstract boolean movimentacaoAlteraEstaConta(MovimentacaoDeConta movimentacao);
+        
 
     private void registrarMovimentacaoSemAlterarSaldo(MovimentacaoDeConta movimentacao) {
         movimentacoesRegistradas.add(movimentacao);
     }
 
-    private void adicionarSaldoMovimentacao(MovimentacaoDeConta movimentacao) {
-        movimentacoesRegistradas.add(movimentacao);
-        saldoMovimentacoes = saldoMovimentacoes.add(movimentacao.getValorMovimentado());
-    }
+    protected abstract void registrarMovimentacaoDeVenda(MovimentacaoDeConta movimentacao);
 
-    private void subtrairSaldoMovimentacao(MovimentacaoDeConta movimentacao) {
-        movimentacoesRegistradas.add(movimentacao);
-        saldoMovimentacoes = saldoMovimentacoes.subtract(movimentacao.getValorMovimentado());
-    }
+    protected abstract void registrarMovimentacaoDeCompra(MovimentacaoDeConta movimentacao);
 
     @Override
     public LocalDateTime getDataUltimaAtualizacao() {
