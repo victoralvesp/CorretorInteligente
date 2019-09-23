@@ -1,17 +1,15 @@
 package com.bolsafacil.corretorinteligente;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.bolsafacil.corretorinteligente.domain.Conta;
-import com.bolsafacil.corretorinteligente.domain.ContaImpl;
-import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
-import com.bolsafacil.corretorinteligente.domain.movimentacoes.MovimentacaoDeCompraDeAcoes;
-import com.bolsafacil.corretorinteligente.domain.movimentacoes.MovimentacaoDeVendaDeAcoes;
+import com.bolsafacil.corretorinteligente.domain.contas.Conta;
+import com.bolsafacil.corretorinteligente.domain.contas.ContaImpl;
+import com.bolsafacil.corretorinteligente.fixtures.FixtureContas;
 
 import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * ContasServiceTests
@@ -22,44 +20,45 @@ public class ContasTests {
     public void deveSubtrairValorDeMovimentacaoDeCompraASaldoDisponivel() {
         //Arrange
         Conta conta = new ContaImpl(new BigDecimal("10000.00")); 
-        var movimentacao1 = criarCompraComValorDe("1500.00");
-        var movimentacao2 = criarCompraComValorDe("2271.00");
+        var fixtureDB = new FixtureContas();
+        var movimentacao1 = fixtureDB.criarCompraComValorDe("1500.00");
+        var movimentacao2 = fixtureDB.criarCompraComValorDe("2271.00");
         // Act
         conta.registrarMovimentacoes(movimentacao1, movimentacao2);
 
         // Assert
         assertThat(conta.getSaldoAtual()).isEqualByComparingTo("6229.00");
     }
-
+    @Test
     public void deveSomarValorDeMovimentacaoDeVendaASaldoDisponivel() {
         //Arrange
         Conta conta = new ContaImpl(new BigDecimal("2500.00"));
-        var movimentacao1 = criarVendaComValorDe("1500.00");
-        var movimentacao2 = criarVendaComValorDe("2271.00");
+        var fixtureDB = new FixtureContas();
+        var movimentacao1 = fixtureDB.criarVendaComValorDe("1500.00");
+        var movimentacao2 = fixtureDB.criarVendaComValorDe("2271.00");
         // Act
         conta.registrarMovimentacoes(movimentacao1, movimentacao2);
 
         // Assert
         assertThat(conta.getSaldoAtual()).isEqualByComparingTo("6271.00");
     }
+
+    @Test
+    public void dataDaUltimaAtualizacaoDaContaDeveSerAUltimaMovimentacaoRegistrada() {
+        //Arrange
+        Conta conta = new ContaImpl(new BigDecimal("2500.00"));
+        var fixtureDB = new FixtureContas();
+        var agora = LocalDateTime.now();
+        var hojeMaisCedo = agora.minusHours(2);
+        var movimentacao1 = fixtureDB.criarMovimentacaoGenerica("1500.00", hojeMaisCedo);
+        var movimentacao2 = fixtureDB.criarMovimentacaoGenerica("2271.00", agora);
+        // Act
+        conta.registrarMovimentacoes(movimentacao1, movimentacao2);
+
+        // Assert
+        var dataUltimaAtualizacaoDaConta = conta.getDataUltimaAtualizacao();
+        assertThat(dataUltimaAtualizacaoDaConta).isEqualToIgnoringNanos(agora);
+    }
     
-
-    private MovimentacaoDeConta criarVendaComValorDe(String val) {
-        var valorVendido = new BigDecimal(val);
-        var data = LocalDateTime.now();
-        var quantidade = new BigDecimal("10");
-        var empresa = "Intel";
-        var movimentacao = new MovimentacaoDeVendaDeAcoes(valorVendido, data, quantidade, empresa);
-        return movimentacao;
-    }
-
-    private MovimentacaoDeConta criarCompraComValorDe(String val) {
-        var valorVendido = new BigDecimal(val);
-        var data = LocalDateTime.now();
-        var quantidade = new BigDecimal("10");
-        var empresa = "Intel";
-        var movimentacao = new MovimentacaoDeCompraDeAcoes(valorVendido, data, quantidade, empresa);
-        return movimentacao;
-    }
 
 }
