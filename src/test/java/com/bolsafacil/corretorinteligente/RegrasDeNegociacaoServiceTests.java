@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 
+import com.bolsafacil.corretorinteligente.domain.contas.ContaDeAcao;
 import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeCompra;
 import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeVenda;
 import com.bolsafacil.corretorinteligente.fixtures.FixtureMonitoramentos;
@@ -69,6 +70,21 @@ public class RegrasDeNegociacaoServiceTests {
         //Assert
         var ehRegraDeVenda = new Condition<>(regra -> regra.getClass() == RegraDeVenda.class, "É regra de compra");
         assertThat(regras).extracting(regra -> regra).areExactly(1, ehRegraDeVenda);
+    }
+
+    @Test
+    public void naoDeveManterContaDeAcaoComSaldoNegativo() {
+        //Arrange
+        var fixtureDB = new FixtureMonitoramentos();
+        var precoVenda = new BigDecimal("10.00");
+        var monitoramentoComVenda = fixtureDB.criarNovoMonitoramento(null, precoVenda);
+        var novaConta = monitoramentoComVenda.getConta();
+        fixtureDB.preencherMonitoramentos(monitoramentoComVenda);
+
+        //Act
+        //Assert
+        assertThat(novaConta.getContasDeAcao()).extracting(ContaDeAcao::getSaldoAtual)
+                                        .allMatch(saldo -> saldo.compareTo(BigDecimal.ZERO) >= 0);
     }
 
     private RegrasDeNegociacaoService criarService(MonitoramentosRepository repo) {

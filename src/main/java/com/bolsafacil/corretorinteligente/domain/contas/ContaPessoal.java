@@ -78,6 +78,13 @@ public class ContaPessoal extends ContaBase {
         return email;
     }
 
+    /**
+     * @return contas de ações pertencentes ao dono da conta pessoal
+     */
+    public Collection<ContaDeAcao> getContasDeAcao() {
+        return contasDeAcao;
+    }
+
     @Override
     protected boolean movimentacaoAlteraEstaConta(MovimentacaoDeConta movimentacao) {
         return true;
