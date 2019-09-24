@@ -2,10 +2,15 @@ package com.bolsafacil.corretorinteligente.domain;
 
 import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
 
 /**
  * Monitoramento
@@ -22,6 +27,9 @@ public class Monitoramento {
     BigDecimal precoCompra;
     @Column(nullable = false, name = "preco_venda")
     BigDecimal precoVenda;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    ContaPessoal conta;
 
     @Column(nullable = false)
     boolean excluido;
@@ -62,6 +70,19 @@ public class Monitoramento {
      */
     public String getEmpresa() {
         return empresa;
+    }
+
+    /**
+     * @return a conta do monitoramento
+     */
+    public ContaPessoal getConta() {
+        return conta;
+    }
+    /**
+     * @param conta conta do monitoramento
+     */
+    public void setConta(ContaPessoal conta) {
+        this.conta = conta;
     }
     
     /**

@@ -35,16 +35,15 @@ public class RegrasDeNegociacaoTests {
         String empresa = "Intel";
         var fixtureRegra = new FixtureRegras();
         var regraDeCompraExemplo = fixtureRegra.criarRegraDeCompra(empresa);
-        var acaoMonitorada = criarAcaoObservada(empresa);
+        var acaoObservada = criarAcaoObservada(empresa);
 
         // Act
-        var movimentacaoGerada = regraDeCompraExemplo.aplicarRegra(acaoMonitorada);
+        var movimentacaoGerada = regraDeCompraExemplo.aplicarRegra(acaoObservada);
         // Assert
         var quantidadeCompradaExemplo = new BigDecimal("1123.59");
         Number valorMovimentado = movimentacaoGerada.getQuantidadeDeAcoesMovimentada();
         var message = "Quantidade esperada: " + quantidadeCompradaExemplo + " Quantidade calculada: " + valorMovimentado;
         assertTrue(message, valorMovimentado.equals(quantidadeCompradaExemplo));
-
     }
 
     @Test
@@ -60,7 +59,6 @@ public class RegrasDeNegociacaoTests {
         // Assert
         var message = "Foi gerada movimentacao para empresa errada";
         assertNull(message, movimentacaoGerada);
-
     }
 
     

@@ -3,6 +3,8 @@ package com.bolsafacil.corretorinteligente.fixtures;
 import java.math.BigDecimal;
 
 import com.bolsafacil.corretorinteligente.domain.Monitoramento;
+import com.bolsafacil.corretorinteligente.domain.contas.ContaDeAcaoImpl;
+import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
 import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeCompra;
 import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeNegociacao;
 import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeVenda;
@@ -16,6 +18,8 @@ public class FixtureRegras {
     public RegraDeNegociacao criarRegraDeVenda(String empresa) {
         var monitoramentoDoExemplo = criarMonitoramento(empresa);
         var saldoDaAcaoMonitoradaDisponivel = new BigDecimal("1123.59");
+        var contaDeAcao = new ContaDeAcaoImpl(saldoDaAcaoMonitoradaDisponivel, null, empresa);
+        var conta = new ContaPessoal(BigDecimal.ZERO ,contaDeAcao);
         var regraDeVendaExemplo = new RegraDeVenda(monitoramentoDoExemplo, saldoDaAcaoMonitoradaDisponivel);
         return regraDeVendaExemplo;
     }
