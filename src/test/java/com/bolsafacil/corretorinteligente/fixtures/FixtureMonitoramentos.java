@@ -45,7 +45,7 @@ public class FixtureMonitoramentos {
 
     public Monitoramento criarNovoMonitoramento(String empresa, BigDecimal precoCompra, BigDecimal precoVenda) {
         var monitoramento = new Monitoramento(empresa, precoCompra, precoVenda);
-        var conta = new ContaPessoal(BigDecimal.ZERO);
+        var conta = new FixtureContas().criarContaPessoalPreenchida();
         monitoramento.setConta(conta);
         return monitoramento;
     }

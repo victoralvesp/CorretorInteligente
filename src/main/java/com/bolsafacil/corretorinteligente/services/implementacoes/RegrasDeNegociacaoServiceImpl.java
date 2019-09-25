@@ -1,13 +1,11 @@
 package com.bolsafacil.corretorinteligente.services.implementacoes;
 
-import java.util.Collection;
-import java.util.function.IntFunction;
-import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.stream.Stream;
 
 import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
 import com.bolsafacil.corretorinteligente.domain.Monitoramento;
@@ -72,7 +70,7 @@ public class RegrasDeNegociacaoServiceImpl implements RegrasDeNegociacaoService 
     }
 
     @Override
-    public Collection<? super MovimentacaoDeConta> aplicarRegrasDeNegociacao(AcaoObservada acaoObservada) {
+    public Collection<? extends MovimentacaoDeConta> aplicarRegrasDeNegociacao(AcaoObservada acaoObservada) {
         if (getRegrasDeNegociacao() == null) {
             return null;
         }

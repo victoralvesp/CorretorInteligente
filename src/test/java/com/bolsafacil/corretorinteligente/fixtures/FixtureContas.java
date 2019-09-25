@@ -2,6 +2,7 @@ package com.bolsafacil.corretorinteligente.fixtures;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
 import com.bolsafacil.corretorinteligente.domain.contas.Conta;
@@ -22,15 +23,23 @@ public class FixtureContas {
         return this.criarContaPessoalPreenchida(BigDecimal.ZERO);
     }
 
+    private Random rand = new Random();
     public ContaPessoal criarContaPessoalPreenchida(BigDecimal saldoInicial) {
-        return new ContaPessoal(saldoInicial);
+        var randId = rand.nextInt(10000);
+        var email = "bla" + randId + "@domain.com";
+        var data = LocalDateTime.now();
+        return criarContaPessoalPreenchida(email, saldoInicial, data);
     }
-
     
     public ContaPessoal criarContaPessoalPreenchida(ContaDeAcao... contasDeAcao) {
-        var collectionContas = Lists.list(contasDeAcao);
+        var randId = rand.nextInt(10000);
+        var email = "bla" + randId + "@domain.com";
         var data = LocalDateTime.now();
-        return new ContaPessoal(BigDecimal.ZERO, data, collectionContas);
+        return criarContaPessoalPreenchida(email, BigDecimal.ZERO, data, contasDeAcao);
+    }
+
+    public ContaPessoal criarContaPessoalPreenchida(String email, BigDecimal saldo, LocalDateTime data, ContaDeAcao... contas) {
+        return new ContaPessoal(email, saldo, data, Lists.list(contas));
     }
 
     public MovimentacaoDeConta criarVendaComValorDe(String val) {
@@ -40,9 +49,19 @@ public class FixtureContas {
 
     public MovimentacaoDeConta criarVendaComValorDe(String val, String empresa) {
         var valorVendido = new BigDecimal(val);
+        var conta = criarContaPessoalPreenchida();
+        return criarVendaComValorDe(empresa, valorVendido, conta);
+    }
+
+    public MovimentacaoDeConta criarVendaComValorDe(String val, Conta conta) {
+        var valorVendido = new BigDecimal(val);
+        var empresa = "Intel";
+        return criarVendaComValorDe(empresa, valorVendido, conta);
+    }
+
+    private MovimentacaoDeConta criarVendaComValorDe(String empresa, BigDecimal valorVendido, Conta conta) {
         var data = LocalDateTime.now();
         var quantidade = new BigDecimal("10");
-        var conta = criarContaPessoalPreenchida();
         var movimentacao = new MovimentacaoDeVendaDeAcoes(valorVendido, data, quantidade, empresa, conta);
         return movimentacao;
     }
@@ -52,11 +71,22 @@ public class FixtureContas {
         return criarCompraComValorDe(val, empresa);
     }
 
-    public MovimentacaoDeConta criarCompraComValorDe(String val, String empresa) {
-        var valorVendido = new BigDecimal(val);
+    public MovimentacaoDeConta criarCompraComValorDe(String val, Conta conta) {
+        var empresa = "Intel";
         var data = LocalDateTime.now();
         var quantidade = new BigDecimal("10");
+        return criarCompraComValorDe(val, empresa, conta, data, quantidade);
+    }
+
+    public MovimentacaoDeConta criarCompraComValorDe(String val, String empresa) {
         var conta = criarContaPessoalPreenchida();
+        var data = LocalDateTime.now();
+        var quantidade = new BigDecimal("10");
+        return criarCompraComValorDe(val, empresa, conta, data, quantidade);
+    }
+
+    private MovimentacaoDeConta criarCompraComValorDe(String val, String empresa, Conta conta, LocalDateTime data, BigDecimal quantidade) {
+        var valorVendido = new BigDecimal(val);
         var movimentacao = new MovimentacaoDeCompraDeAcoes(valorVendido, data, quantidade, empresa, conta);
         return movimentacao;
     }

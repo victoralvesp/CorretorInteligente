@@ -28,19 +28,18 @@ public class ContaPessoal extends ContaBase {
     @OneToMany(cascade = CascadeType.ALL)
     private Collection<ContaDeAcao> contasDeAcao;
 
-    public ContaPessoal(BigDecimal saldoInicial) {
-        super(saldoInicial);
-        contasDeAcao = new ArrayList<ContaDeAcao>();
+    public ContaPessoal(String email, BigDecimal saldoInicial) {
+        this(email, saldoInicial, LocalDateTime.MIN, new ArrayList<ContaDeAcao>());
     }
 
-    public ContaPessoal(BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva) {
-        super(saldoInicial, dataUltimaAtualizacaoSalva);
-        contasDeAcao = new ArrayList<ContaDeAcao>();
+    public ContaPessoal(String email, BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva) {
+        this(email, saldoInicial, dataUltimaAtualizacaoSalva, new ArrayList<ContaDeAcao>());
     }
 
-    public ContaPessoal(BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva, Collection<ContaDeAcao> contasDeAcao) {
+    public ContaPessoal(String email, BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva, Collection<ContaDeAcao> contasDeAcao) {
         super(saldoInicial, dataUltimaAtualizacaoSalva);
         this.contasDeAcao = contasDeAcao;
+        this.email = email;
     }
 
     public BigDecimal buscarQuantidadeDeAcoesDisponivel(String empresa) {
@@ -97,7 +96,7 @@ public class ContaPessoal extends ContaBase {
 
     @Override
     protected boolean movimentacaoPodeAlterarEstaConta(MovimentacaoDeConta movimentacao) {
-        return movimentacao.getContaMovimentada().equals(this);
+        return equals(movimentacao.getContaMovimentada());
     }
 
     @Override

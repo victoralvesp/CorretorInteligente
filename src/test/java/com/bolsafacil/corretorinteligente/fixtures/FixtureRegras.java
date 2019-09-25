@@ -1,20 +1,13 @@
 package com.bolsafacil.corretorinteligente.fixtures;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.bolsafacil.corretorinteligente.domain.Monitoramento;
-import com.bolsafacil.corretorinteligente.domain.contas.ContaDeAcao;
 import com.bolsafacil.corretorinteligente.domain.contas.ContaDeAcaoImpl;
 import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
 import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeCompra;
 import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeNegociacao;
 import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeVenda;
-
-import org.assertj.core.util.Lists;
 
 /**
  * FixtureRegras
@@ -28,9 +21,8 @@ public class FixtureRegras {
 
     public RegraDeNegociacao criarRegraDeVenda(String empresa, BigDecimal valorMonitoradoVenda) {
         var saldoDaAcaoMonitoradaDisponivel = new BigDecimal("1123.59");
-        ContaDeAcao contaDeAcao = new ContaDeAcaoImpl(saldoDaAcaoMonitoradaDisponivel, null, empresa);
-        var contasDeAcao = Lists.list(contaDeAcao);
-        var conta = new ContaPessoal(BigDecimal.ZERO, LocalDateTime.now(), contasDeAcao);
+        var contaDeAcao = new ContaDeAcaoImpl(saldoDaAcaoMonitoradaDisponivel, null, empresa);
+        var conta = new FixtureContas().criarContaPessoalPreenchida(contaDeAcao);
         var regraDeVendaExemplo = criarRegraDeVenda(empresa, valorMonitoradoVenda, saldoDaAcaoMonitoradaDisponivel, conta);
         return regraDeVendaExemplo;
     }

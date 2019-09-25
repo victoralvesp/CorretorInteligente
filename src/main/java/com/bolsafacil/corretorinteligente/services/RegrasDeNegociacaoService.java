@@ -11,5 +11,5 @@ import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeNegoc
  */
 public interface RegrasDeNegociacaoService {
     public Collection<RegraDeNegociacao> getRegrasDeNegociacao();
-    public Collection<? super MovimentacaoDeConta> aplicarRegrasDeNegociacao(AcaoObservada acaoObservada);
+    public Collection<? extends MovimentacaoDeConta> aplicarRegrasDeNegociacao(AcaoObservada acaoObservada);
 }
