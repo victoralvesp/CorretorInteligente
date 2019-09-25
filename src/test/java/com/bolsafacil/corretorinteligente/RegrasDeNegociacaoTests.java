@@ -68,7 +68,7 @@ public class RegrasDeNegociacaoTests {
         String empresa = "Intel";
         var fixtureRegra = new FixtureRegras();
         var regraDeVendaExemplo = fixtureRegra.criarRegraDeVenda(empresa);
-        var acaoMonitorada = criarAcaoObservada(empresa);
+        var acaoMonitorada = criarAcaoObservada(empresa, "8.90", "15.00");
 
         // Act
         var movimentacaoGerada = regraDeVendaExemplo.aplicarRegra(acaoMonitorada);
@@ -80,7 +80,8 @@ public class RegrasDeNegociacaoTests {
     public void regraDeVendaDeveVenderQuantidadeConformeExemplo() {
         String empresa = "Intel";
         var fixtureRegra = new FixtureRegras();
-        var regraDeVendaExemplo = fixtureRegra.criarRegraDeVenda(empresa);
+        var valorMonitorado = new BigDecimal("8.00");
+        var regraDeVendaExemplo = fixtureRegra.criarRegraDeVenda(empresa, valorMonitorado);
         var acaoMonitorada = criarAcaoObservada(empresa);
 
         // Act
@@ -110,8 +111,18 @@ public class RegrasDeNegociacaoTests {
     }
     
     private AcaoObservada criarAcaoObservada(String empresa) {
-        var precoCompraObservado = new BigDecimal("8.90");
-        var precoVendaObservado = new BigDecimal("9.50");
+        var precoCompra = "8.90";
+        return criarAcaoObservada(empresa, precoCompra);
+    }
+
+    private AcaoObservada criarAcaoObservada(String empresa, String precoCompra) {
+        var precoVenda = "9.50";
+        return criarAcaoObservada(empresa, precoCompra, precoVenda);
+    }
+    
+    private AcaoObservada criarAcaoObservada(String empresa, String precoCompra, String precoVenda) {
+        var precoCompraObservado = new BigDecimal(precoCompra);
+        var precoVendaObservado = new BigDecimal(precoVenda);
         var acaoMonitorada = new AcaoObservada(empresa, precoCompraObservado, precoVendaObservado);
         return acaoMonitorada;
     }

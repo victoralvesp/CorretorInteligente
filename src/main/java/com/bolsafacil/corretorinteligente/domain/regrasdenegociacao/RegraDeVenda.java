@@ -7,6 +7,7 @@ import com.bolsafacil.corretorinteligente.DefinicoesDoServidor;
 import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
 import com.bolsafacil.corretorinteligente.domain.Monitoramento;
 import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
+import com.bolsafacil.corretorinteligente.domain.contas.Conta;
 import com.bolsafacil.corretorinteligente.domain.movimentacoes.MovimentacaoDeVendaDeAcoes;
 
 /**
@@ -35,7 +36,8 @@ public class RegraDeVenda implements RegraDeNegociacao {
             var valorTotalVendido = quantidadeDeAcoesDisponivel.multiply(precoVendaObservado).setScale(2, modoArredondamento);
             var dataDaVenda = DefinicoesDoServidor.getDataAtual();
             var quantidadeMovimentada = quantidadeDeAcoesDisponivel.multiply(new BigDecimal(-1));
-            var movimentacaoDeCompra = new MovimentacaoDeVendaDeAcoes(valorTotalVendido, dataDaVenda, quantidadeMovimentada, empresaDaAcao);
+            var movimentacaoDeCompra = new MovimentacaoDeVendaDeAcoes(valorTotalVendido, dataDaVenda, quantidadeMovimentada, empresaDaAcao
+                                                                    , getContaDoMonitoramento());
 
             return movimentacaoDeCompra;
         } else {
@@ -43,10 +45,12 @@ public class RegraDeVenda implements RegraDeNegociacao {
         }
 
     }
-    private boolean estaAcimaDoDesejado(BigDecimal precoCompraObservado) {
-        var precoDesejado = monitoramentoDaRegra.getPrecoCompra();
-        return precoCompraObservado.compareTo(precoDesejado) <= 0;
+    private boolean estaAcimaDoDesejado(BigDecimal precoVendaObservado) {
+        var precoDesejado = monitoramentoDaRegra.getPrecoVenda();
+        return precoVendaObservado.compareTo(precoDesejado) >= 0;
     }
 
-    
+    private Conta getContaDoMonitoramento() {
+        return monitoramentoDaRegra.getConta();
+    }
 }

@@ -7,6 +7,7 @@ import com.bolsafacil.corretorinteligente.DefinicoesDoServidor;
 import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
 import com.bolsafacil.corretorinteligente.domain.Monitoramento;
 import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
+import com.bolsafacil.corretorinteligente.domain.contas.Conta;
 import com.bolsafacil.corretorinteligente.domain.movimentacoes.MovimentacaoDeCompraDeAcoes;
 
 /**
@@ -44,7 +45,8 @@ public class RegraDeCompra implements RegraDeNegociacao {
                                                                  .multiply(new BigDecimal(-1))
                                                                  .setScale(2, modoArredondamento);
             var movimentacaoDeCompra = new MovimentacaoDeCompraDeAcoes(valorTotalMovimentado, dataDaCompra,
-                                                                            quantidadeDeAcoesAComprar, empresaDaAcao);
+                                                                            quantidadeDeAcoesAComprar, empresaDaAcao
+                                                                            , getContaDoMonitoramento());
 
             return movimentacaoDeCompra;
         } else {
@@ -58,5 +60,8 @@ public class RegraDeCompra implements RegraDeNegociacao {
         return precoCompraObservado.compareTo(precoDesejado) <= 0;
     }
 
+    private Conta getContaDoMonitoramento() {
+        return monitoramentoDaRegra.getConta();
+    }
     
 }

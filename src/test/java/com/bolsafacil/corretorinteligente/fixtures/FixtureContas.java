@@ -4,16 +4,35 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
+import com.bolsafacil.corretorinteligente.domain.contas.Conta;
+import com.bolsafacil.corretorinteligente.domain.contas.ContaDeAcao;
+import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
 import com.bolsafacil.corretorinteligente.domain.movimentacoes.MovimentacaoDeCompraDeAcoes;
 import com.bolsafacil.corretorinteligente.domain.movimentacoes.MovimentacaoDeVendaDeAcoes;
 import com.bolsafacil.corretorinteligente.domain.movimentacoes.TipoMovimentacao;
+
+import org.assertj.core.util.Lists;
 
 /**
  * FixtureContas
  */
 public class FixtureContas {
 
+    public ContaPessoal criarContaPessoalPreenchida() {
+        return this.criarContaPessoalPreenchida(BigDecimal.ZERO);
+    }
+
+    public ContaPessoal criarContaPessoalPreenchida(BigDecimal saldoInicial) {
+        return new ContaPessoal(saldoInicial);
+    }
+
     
+    public ContaPessoal criarContaPessoalPreenchida(ContaDeAcao... contasDeAcao) {
+        var collectionContas = Lists.list(contasDeAcao);
+        var data = LocalDateTime.now();
+        return new ContaPessoal(BigDecimal.ZERO, data, collectionContas);
+    }
+
     public MovimentacaoDeConta criarVendaComValorDe(String val) {
         var empresa = "Intel";
         return criarVendaComValorDe(val, empresa);
@@ -23,7 +42,8 @@ public class FixtureContas {
         var valorVendido = new BigDecimal(val);
         var data = LocalDateTime.now();
         var quantidade = new BigDecimal("10");
-        var movimentacao = new MovimentacaoDeVendaDeAcoes(valorVendido, data, quantidade, empresa);
+        var conta = criarContaPessoalPreenchida();
+        var movimentacao = new MovimentacaoDeVendaDeAcoes(valorVendido, data, quantidade, empresa, conta);
         return movimentacao;
     }
 
@@ -36,35 +56,42 @@ public class FixtureContas {
         var valorVendido = new BigDecimal(val);
         var data = LocalDateTime.now();
         var quantidade = new BigDecimal("10");
-        var movimentacao = new MovimentacaoDeCompraDeAcoes(valorVendido, data, quantidade, empresa);
+        var conta = criarContaPessoalPreenchida();
+        var movimentacao = new MovimentacaoDeCompraDeAcoes(valorVendido, data, quantidade, empresa, conta);
         return movimentacao;
     }
+
     public MovimentacaoDeConta criarMovimentacaoGenerica(String valor, LocalDateTime dataDaMovimentacao) {
-        return new MovimentacaoDeConta(){
-        
+        return new MovimentacaoDeConta() {
+
             @Override
             public BigDecimal getValorMovimentado() {
                 return new BigDecimal(valor);
             }
-        
+
             @Override
             public TipoMovimentacao getTipoMovimentacao() {
                 return null;
             }
-        
+
             @Override
             public BigDecimal getQuantidadeDeAcoesMovimentada() {
                 return new BigDecimal("10");
             }
-        
+
             @Override
             public String getEmpresaDaAcaoMovimentada() {
                 return "Intel";
             }
-        
+
             @Override
             public LocalDateTime getDataMovimentacao() {
                 return dataDaMovimentacao;
+            }
+
+            @Override
+            public Conta getContaMovimentada() {
+                return null;
             }
         };
     }

@@ -1,15 +1,16 @@
 package com.bolsafacil.corretorinteligente;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 
+import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
+import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
 import com.bolsafacil.corretorinteligente.domain.contas.ContaDeAcao;
 import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeCompra;
 import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeVenda;
+import com.bolsafacil.corretorinteligente.fixtures.FixtureContas;
 import com.bolsafacil.corretorinteligente.fixtures.FixtureMonitoramentos;
-import com.bolsafacil.corretorinteligente.fixtures.FixtureObservacoes;
 import com.bolsafacil.corretorinteligente.repositorios.MonitoramentosRepository;
 import com.bolsafacil.corretorinteligente.services.RegrasDeNegociacaoService;
 import com.bolsafacil.corretorinteligente.services.implementacoes.RegrasDeNegociacaoServiceImpl;
@@ -21,21 +22,6 @@ import org.junit.Test;
  * RegrasDeNegociacaoServiceTests
  */
 public class RegrasDeNegociacaoServiceTests {
-
-    // @Test
-    public void deveAplicarRegraDeCompraAMonitoramentoAcimaDaRegra() {
-        // Arrange
-        RegrasDeNegociacaoService regrasDeNegociacaoService = null;
-        var fixtureDB = new FixtureObservacoes();
-        var observacao = fixtureDB.criarNovaObservacao();
-
-        // Act
-        // var movimentacoesDeAcoesGeradas = regrasDeNegociacaoService.aplicarRegrasDeNegociacao(observacao);
-
-        // Assert
-        // assertTrue("A aplicacao de regras de compra não gerou resultado",
-        //         movimentacoesDeAcoesGeradas != null && movimentacoesDeAcoesGeradas.size() > 0);
-    }
 
     @Test
     public void deveCriarUmaRegraDeCompraParaUmMonitoramentoComPrecoDeCompraPositivoSalvo() {
@@ -76,16 +62,23 @@ public class RegrasDeNegociacaoServiceTests {
     public void naoDeveManterContaDeAcaoComSaldoNegativo() {
         //Arrange
         var fixtureDB = new FixtureMonitoramentos();
+        var fixtureDBContas = new FixtureContas();
         var precoVenda = new BigDecimal("10.00");
+        var contaDoMonitoramento = fixtureDBContas.criarContaPessoalPreenchida();
         var monitoramentoComVenda = fixtureDB.criarNovoMonitoramento(null, precoVenda);
-        var novaConta = monitoramentoComVenda.getConta();
+        monitoramentoComVenda.setConta(contaDoMonitoramento);
+        var empresa = monitoramentoComVenda.getEmpresa();
         fixtureDB.preencherMonitoramentos(monitoramentoComVenda);
-
+        var observacaoDeAcao = new AcaoObservada(empresa, BigDecimal.valueOf(100000), precoVenda.multiply(new BigDecimal(2)));
+        var service = criarService(fixtureDB.criarMockMonitoramentosRepository());
         //Act
+        var movimentacoesDeConta = service.aplicarRegrasDeNegociacao(observacaoDeAcao);
+        contaDoMonitoramento.registrarMovimentacoes(movimentacoesDeConta.toArray(new MovimentacaoDeConta[] { }));
+
         //Assert
-        assertThat(novaConta.getContasDeAcao()).extracting(ContaDeAcao::getSaldoAtual)
+        assertThat(contaDoMonitoramento.getContasDeAcao()).extracting(ContaDeAcao::getSaldoAtual)
                                         .allMatch(saldo -> saldo.compareTo(BigDecimal.ZERO) >= 0);
-    }
+    } 
 
     private RegrasDeNegociacaoService criarService(MonitoramentosRepository repo) {
         return new RegrasDeNegociacaoServiceImpl(repo);

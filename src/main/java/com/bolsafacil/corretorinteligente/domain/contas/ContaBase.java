@@ -41,7 +41,7 @@ public abstract class ContaBase implements Conta {
             return;
 
         for (MovimentacaoDeConta movimentacao : movimentacoes) {
-            if(movimentacaoAlteraEstaConta(movimentacao)) {
+            if(movimentacaoPodeAlterarEstaConta(movimentacao)) {
 
                 var tipoMovimentacao = movimentacao.getTipoMovimentacao();
                 if(tipoMovimentacao == null) {
@@ -63,7 +63,7 @@ public abstract class ContaBase implements Conta {
         }
     }
 
-    protected abstract boolean movimentacaoAlteraEstaConta(MovimentacaoDeConta movimentacao);
+    protected abstract boolean movimentacaoPodeAlterarEstaConta(MovimentacaoDeConta movimentacao);
         
 
     private void registrarMovimentacaoSemAlterarSaldo(MovimentacaoDeConta movimentacao) {

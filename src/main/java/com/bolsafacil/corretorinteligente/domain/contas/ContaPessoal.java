@@ -6,15 +6,26 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
 import com.bolsafacil.corretorinteligente.DefinicoesDoServidor;
 import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
 
 /**
  * ContaPessoal
  */
+@Entity
 public class ContaPessoal extends ContaBase {
 
+    @Id
+    long id;
+
     String email;
+    
+    @OneToMany(cascade = CascadeType.ALL)
     private Collection<ContaDeAcao> contasDeAcao;
 
     public ContaPessoal(BigDecimal saldoInicial) {
@@ -27,8 +38,7 @@ public class ContaPessoal extends ContaBase {
         contasDeAcao = new ArrayList<ContaDeAcao>();
     }
 
-    public ContaPessoal(BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva,
-            Collection<ContaDeAcao> contasDeAcao) {
+    public ContaPessoal(BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva, Collection<ContaDeAcao> contasDeAcao) {
         super(saldoInicial, dataUltimaAtualizacaoSalva);
         this.contasDeAcao = contasDeAcao;
     }
@@ -86,9 +96,19 @@ public class ContaPessoal extends ContaBase {
     }
 
     @Override
-    protected boolean movimentacaoAlteraEstaConta(MovimentacaoDeConta movimentacao) {
-        return true;
+    protected boolean movimentacaoPodeAlterarEstaConta(MovimentacaoDeConta movimentacao) {
+        return movimentacao.getContaMovimentada().equals(this);
     }
 
-    
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj)
+            return true;
+
+        if(obj == null || obj.getClass() != this.getClass())
+            return false;
+
+        var other = (ContaPessoal) obj;
+        return email.equals(other.getEmail());
+    }
 }

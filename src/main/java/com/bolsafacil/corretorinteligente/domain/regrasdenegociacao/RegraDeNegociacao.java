@@ -8,5 +8,5 @@ import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
  */
 public interface RegraDeNegociacao {
 
-    public MovimentacaoDeConta aplicarRegra(AcaoObservada acaoMonitorada);
+    public MovimentacaoDeConta aplicarRegra(AcaoObservada acaoObservada);
 }

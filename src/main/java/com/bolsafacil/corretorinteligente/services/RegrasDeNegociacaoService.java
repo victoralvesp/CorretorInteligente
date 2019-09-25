@@ -3,6 +3,7 @@ package com.bolsafacil.corretorinteligente.services;
 import java.util.Collection;
 
 import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
+import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
 import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeNegociacao;
 
 /**
@@ -10,5 +11,5 @@ import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeNegoc
  */
 public interface RegrasDeNegociacaoService {
     public Collection<RegraDeNegociacao> getRegrasDeNegociacao();
-    public Collection<?> aplicarRegrasDeNegociacao(AcaoObservada acaoObservada);
+    public Collection<? super MovimentacaoDeConta> aplicarRegrasDeNegociacao(AcaoObservada acaoObservada);
 }

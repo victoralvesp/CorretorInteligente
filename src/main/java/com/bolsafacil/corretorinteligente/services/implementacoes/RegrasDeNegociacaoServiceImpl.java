@@ -54,13 +54,18 @@ public class RegrasDeNegociacaoServiceImpl implements RegrasDeNegociacaoService 
 
         var regrasCriadas = new ArrayList<RegraDeNegociacao>();
 
-        if (monitoramento.getPrecoCompra().compareTo(BigDecimal.ZERO) > 0) {
+        var precoCompraMonitoramento = monitoramento.getPrecoCompra();
+        if (precoCompraMonitoramento != null && precoCompraMonitoramento.compareTo(BigDecimal.ZERO) > 0) {
             var saldoDisponivelNaConta = contaDoMonitoramento.getSaldoAtual();
             regrasCriadas.add(new RegraDeCompra(monitoramento, saldoDisponivelNaConta));
         }
-        // if (monitoramento.getPrecoVenda().compareTo(BigDecimal.ZERO) > 0) {
-        //     regrasCriadas.add(new RegraDeVenda(monitoramentoDaRegra, quantidadeDeAcoesDisponivel))
-        // }
+
+        var precoVendaMonitoramento = monitoramento.getPrecoVenda();
+		if (precoVendaMonitoramento != null && precoVendaMonitoramento.compareTo(BigDecimal.ZERO) > 0) {
+            var empresaDoMonitoramento = monitoramento.getEmpresa();
+            var quantidadeDeAcoesDisponivel = contaDoMonitoramento.buscarQuantidadeDeAcoesDisponivel(empresaDoMonitoramento);
+            regrasCriadas.add(new RegraDeVenda(monitoramento, quantidadeDeAcoesDisponivel));
+        }
         
 
         return regrasCriadas.stream();
@@ -68,13 +73,15 @@ public class RegrasDeNegociacaoServiceImpl implements RegrasDeNegociacaoService 
 
     @Override
     public Collection<? super MovimentacaoDeConta> aplicarRegrasDeNegociacao(AcaoObservada acaoObservada) {
-        if (regrasMonitoradas == null) {
+        if (getRegrasDeNegociacao() == null) {
             return null;
         }
         return regrasMonitoradas.stream()
                         .map(regra -> regra.aplicarRegra(acaoObservada))
                         .collect(toList());
     }
+
+    
 
     
 }
