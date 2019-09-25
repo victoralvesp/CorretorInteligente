@@ -11,24 +11,24 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-@Entity
-@Table(name = "eventos_de_observacao_de_acoes")
+// @Entity
+// @Table(name = "eventos_de_observacao_de_acoes")
 public class ObservacaoDeAcoes {
 
-    @Id
+    // @Id
     long id;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_evento_observacao")
+    // @OneToMany(fetch = FetchType.EAGER)
+    // @JoinColumn(name = "id_evento_observacao")
     Set<AcaoObservada> acoesObservadas;
     
-    @Column(nullable = false, name = "data_evento")
+    // @Column(nullable = false, name = "data_evento")
     LocalDateTime data;
 
-    @Column(nullable = false, name = "data_registro")
+    // @Column(nullable = false, name = "data_registro")
     LocalDateTime dataRegistro;
 
-    @Column
+    // @Column
     boolean excluido;
 
 

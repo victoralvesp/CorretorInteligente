@@ -1,52 +1,43 @@
-package com.bolsafacil.corretorinteligente.domain;
+package com.bolsafacil.corretorinteligente.entities;
 
 import java.math.BigDecimal;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
+import com.bolsafacil.corretorinteligente.domain.Monitoramento;
 
 /**
- * Monitoramento
+ * MonitoramentosDataEntity
  */
-public class Monitoramento {
+@Entity
+@Table(name = "monitoramentos")
+public class MonitoramentosDataEntity {
 
+    @Id
+    @Column(nullable = false)
     String empresa;    
+    @Column(nullable = false, name = "preco_compra")
     BigDecimal precoCompra;
+    @Column(nullable = false, name = "preco_venda")
     BigDecimal precoVenda;
 
-    ContaPessoal conta;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    ContaDataEntity conta;
 
+    @Column(nullable = false)
     boolean excluido;
 
-    @Override
-    public boolean equals(Object obj) {
-        if(this == obj)
-            return true;
-
-        if(obj == null || obj.getClass() != this.getClass())
-            return false;
-
-        var other = (Monitoramento) obj;
-        return empresa.equals(other.getEmpresa());
-    }
-
-    public Monitoramento(String empresa, BigDecimal precoCompra, BigDecimal precoVenda, long id) {
-        this.empresa = empresa;
-        this.precoCompra = precoCompra;
-        this.precoVenda = precoVenda; 
-    }
-    
-    public Monitoramento(String empresa, BigDecimal precoCompra, BigDecimal precoVenda) {
-        this.empresa = empresa;
-        this.precoCompra = precoCompra;
-        this.precoVenda = precoVenda; 
+    public Monitoramento converterParaModelo() {
+        var contaConvertida = conta.converterParaModelo();
+        var monitoramento = new Monitoramento(empresa, precoCompra, precoVenda);
+        monitoramento.setConta(contaConvertida);
+        return monitoramento;
     }
 
     /**
@@ -59,13 +50,13 @@ public class Monitoramento {
     /**
      * @return a conta do monitoramento
      */
-    public ContaPessoal getConta() {
+    public ContaDataEntity getConta() {
         return conta;
     }
     /**
      * @param conta conta do monitoramento
      */
-    public void setConta(ContaPessoal conta) {
+    public void setConta(ContaDataEntity conta) {
         this.conta = conta;
     }
     
@@ -96,4 +87,7 @@ public class Monitoramento {
     public void setExcluido(boolean excluido) {
         this.excluido = excluido;
     }
+
+
+  
 }

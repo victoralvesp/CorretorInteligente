@@ -18,7 +18,7 @@ public class MovimentacaoDeCompraDeAcoes implements MovimentacaoDeConta {
     private Conta conta;
 
     public MovimentacaoDeCompraDeAcoes(BigDecimal valorTotalMovimentado, LocalDateTime dataDaCompra,
-            BigDecimal quantidadeDeAcoesCompradas, String empresa, Conta conta) {
+        BigDecimal quantidadeDeAcoesCompradas, String empresa, Conta conta) {
         this.quantidadeDeAcoesCompradas = quantidadeDeAcoesCompradas;
         this.dataDaCompra = dataDaCompra;
         this.valorComprado = valorTotalMovimentado;

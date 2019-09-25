@@ -12,11 +12,10 @@ public class MonitoramentoDto {
     public String empresa;
     public BigDecimal precoCompra;
     public BigDecimal precoVenda;
-    public long id;
 
 
     public Monitoramento converterParaModelo() {
-        var monitoramento = new Monitoramento(empresa, precoCompra, precoVenda, id);
+        var monitoramento = new Monitoramento(empresa, precoCompra, precoVenda);
         return monitoramento;
     }
 }

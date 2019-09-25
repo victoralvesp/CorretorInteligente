@@ -1,6 +1,7 @@
 package com.bolsafacil.corretorinteligente.domain;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +13,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "acoes_do_evento_de_observacao")
+@Table(name = "observacoes_de_acao")
 public class AcaoObservada {
 
     @Id
@@ -25,6 +26,10 @@ public class AcaoObservada {
     BigDecimal precoCompra;
     @Column(nullable = false, name = "preco_venda")
     BigDecimal precoVenda;
+
+    @Column(nullable = false, name = "data_evento")
+    LocalDateTime data;
+
 
     public AcaoObservada(String empresa, BigDecimal precoCompra, BigDecimal precoVenda) {
         this.empresa = empresa;

@@ -18,11 +18,8 @@ import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
 /**
  * ContaPessoal
  */
-//@Entity
-//@Table(name = "contas")
 public class ContaPessoal extends ContaBase {
 
-    @Id
     long id;
 
     String email;
@@ -37,12 +34,17 @@ public class ContaPessoal extends ContaBase {
     public ContaPessoal(String email, BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva) {
         this(email, saldoInicial, dataUltimaAtualizacaoSalva, new ArrayList<ContaDeAcao>());
     }
+    public ContaPessoal(String email, BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva, Collection<ContaDeAcao> contasDeAcao, long id) {
+        this(email, saldoInicial, dataUltimaAtualizacaoSalva, contasDeAcao);
+        this.id = id;
+    }
 
     public ContaPessoal(String email, BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva, Collection<ContaDeAcao> contasDeAcao) {
         super(saldoInicial, dataUltimaAtualizacaoSalva);
         this.contasDeAcao = contasDeAcao;
         this.email = email;
     }
+
 
     public BigDecimal buscarQuantidadeDeAcoesDisponivel(String empresa) {
         return buscarContaDeAcaoDaEmpresa(empresa)

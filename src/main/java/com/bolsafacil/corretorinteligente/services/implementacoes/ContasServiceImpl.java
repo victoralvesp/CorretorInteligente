@@ -2,6 +2,7 @@ package com.bolsafacil.corretorinteligente.services.implementacoes;
 
 import java.util.Collection;
 
+import com.bolsafacil.corretorinteligente.domain.contas.Conta;
 import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
 import com.bolsafacil.corretorinteligente.repositorios.ContasRepository;
 import com.bolsafacil.corretorinteligente.services.ContasService;
@@ -23,13 +24,18 @@ public class ContasServiceImpl implements ContasService {
 
     @Override
     public Collection<ContaPessoal> listar() {
-        return null;
+        return  repoContas.listar();
     }
 
     @Override
     public ContaPessoal inserir(ContaPessoal contaConvertida) {
-        return null;
+        repoContas.salvar(contaConvertida);
+        return  repoContas.buscar(contaConvertida.getEmail());
     }
 
-    
+
+	@Override
+	public void salvar(Conta... contas) {
+		repoContas.salvar(contas);
+	}
 }

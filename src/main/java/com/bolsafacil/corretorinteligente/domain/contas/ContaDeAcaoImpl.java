@@ -12,6 +12,8 @@ public class ContaDeAcaoImpl extends ContaBase implements ContaDeAcao {
     
     String empresaDaAcao;
 
+    long id;
+
     public ContaDeAcaoImpl(BigDecimal saldoInicial, String empresaDaAcao) {
         super(saldoInicial);
         this.empresaDaAcao = empresaDaAcao;
@@ -22,6 +24,13 @@ public class ContaDeAcaoImpl extends ContaBase implements ContaDeAcao {
         super(saldoInicial, dataUltimaAtualizacaoSalva);
         this.empresaDaAcao = empresaDaAcao;
     }
+
+    public ContaDeAcaoImpl(BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva, String empresaDaAcao, long id) {
+        super(saldoInicial, dataUltimaAtualizacaoSalva);
+        this.empresaDaAcao = empresaDaAcao;
+        this.id = id;
+    }
+
     /**
      * @return the empresaDaAcao
      */

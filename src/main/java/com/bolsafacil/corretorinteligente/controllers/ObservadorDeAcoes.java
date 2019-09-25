@@ -8,6 +8,7 @@ import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
 import com.bolsafacil.corretorinteligente.domain.contas.Conta;
 import com.bolsafacil.corretorinteligente.repositorios.ContasRepository;
 import com.bolsafacil.corretorinteligente.repositorios.MonitoramentosRepository;
+import com.bolsafacil.corretorinteligente.services.ContasService;
 import com.bolsafacil.corretorinteligente.services.RegrasDeNegociacaoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,8 @@ public class ObservadorDeAcoes {
     RegrasDeNegociacaoService service;
 
     @Autowired
-    MonitoramentosRepository repoMonitoramentos; 
+    ContasService serviceContas;
 
-    @Autowired
-    ContasRepository repoContas;
 
     
     @PostMapping(
@@ -46,7 +45,7 @@ public class ObservadorDeAcoes {
             var movimentacoesDeConta = service.aplicarRegrasDeNegociacao(acaoConvertida);
             var contasMovimentadas = movimentacoesDeConta.stream().map(mov -> mov.getContaMovimentada());
             contasMovimentadas.forEach(conta -> conta.registrarMovimentacoes(movimentacoesDeConta.toArray(MovimentacaoDeConta[]::new)));
-            repoContas.salvar(contasMovimentadas.toArray(Conta[]::new));
+            serviceContas.salvar(contasMovimentadas.toArray(Conta[]::new));
             return ok(movimentacoesDeConta);
         } catch (Exception e) {
             return badRequest().body(e.getMessage());
