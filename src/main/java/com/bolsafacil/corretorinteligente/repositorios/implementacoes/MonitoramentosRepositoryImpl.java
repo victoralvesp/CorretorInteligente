@@ -5,9 +5,12 @@ import java.util.Set;
 import com.bolsafacil.corretorinteligente.domain.Monitoramento;
 import com.bolsafacil.corretorinteligente.repositorios.MonitoramentosRepository;
 
+import org.springframework.stereotype.Component;
+
 /**
  * MonitoramentosRepositoryImpl
  */
+@Component
 public class MonitoramentosRepositoryImpl implements MonitoramentosRepository {
 
     @Override

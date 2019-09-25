@@ -11,7 +11,6 @@ import java.util.Random;
 import java.util.Set;
 
 import com.bolsafacil.corretorinteligente.domain.Monitoramento;
-import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
 import com.bolsafacil.corretorinteligente.repositorios.MonitoramentosRepository;
 
 import org.mockito.Mockito;

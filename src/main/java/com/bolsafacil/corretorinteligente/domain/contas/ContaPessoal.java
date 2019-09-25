@@ -10,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import com.bolsafacil.corretorinteligente.DefinicoesDoServidor;
 import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
@@ -17,7 +18,8 @@ import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
 /**
  * ContaPessoal
  */
-@Entity
+//@Entity
+//@Table(name = "contas")
 public class ContaPessoal extends ContaBase {
 
     @Id
@@ -25,7 +27,7 @@ public class ContaPessoal extends ContaBase {
 
     String email;
     
-    @OneToMany(cascade = CascadeType.ALL)
+    //@OneToMany(cascade = CascadeType.ALL)
     private Collection<ContaDeAcao> contasDeAcao;
 
     public ContaPessoal(String email, BigDecimal saldoInicial) {

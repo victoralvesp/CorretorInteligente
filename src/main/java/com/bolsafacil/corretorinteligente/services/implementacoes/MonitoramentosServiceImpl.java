@@ -7,11 +7,14 @@ import com.bolsafacil.corretorinteligente.domain.Monitoramento;
 import com.bolsafacil.corretorinteligente.repositorios.MonitoramentosRepository;
 import com.bolsafacil.corretorinteligente.services.MonitoramentosService;
 
+import org.springframework.stereotype.Component;
+
 import javassist.NotFoundException;
 
 /**
  * MonitoramentosService
  */
+@Component
 public class MonitoramentosServiceImpl implements MonitoramentosService {
 
     private final MonitoramentosRepository repoMonitoramentos;

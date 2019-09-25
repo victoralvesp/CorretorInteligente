@@ -12,6 +12,7 @@ import com.bolsafacil.corretorinteligente.services.RegrasDeNegociacaoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @EnableAutoConfiguration
+@ComponentScan
 public class ObservadorDeAcoes {
     @Autowired
     RegrasDeNegociacaoService service;
@@ -33,7 +35,7 @@ public class ObservadorDeAcoes {
 
     
     @PostMapping(
-        value="/monitoramentos/",
+        value="/acoes/",
         consumes = "application/json",
         produces = "application/json"
     )

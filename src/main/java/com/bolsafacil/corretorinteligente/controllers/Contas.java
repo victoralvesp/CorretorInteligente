@@ -9,6 +9,7 @@ import com.bolsafacil.corretorinteligente.services.ContasService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @EnableAutoConfiguration
+@ComponentScan
 public class Contas {
     @Autowired
     ContasService service;
@@ -29,7 +31,7 @@ public class Contas {
     ContasRepository repoContas; 
 
     @GetMapping(
-        value="/contas/",
+        value="/contas",
         produces = "application/json"
     )
     @ResponseBody

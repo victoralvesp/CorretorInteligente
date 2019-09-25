@@ -7,11 +7,14 @@ import com.bolsafacil.corretorinteligente.domain.ObservacaoDeAcoes;
 import com.bolsafacil.corretorinteligente.repositorios.ObservacoesDeAcaoRepository;
 import com.bolsafacil.corretorinteligente.services.AcoesService;
 
+import org.springframework.stereotype.Component;
+
 import javassist.NotFoundException;
 
 /**
  * MonitorServiceImpl
  */
+@Component
 public class AcoesServiceImpl implements AcoesService {
 
     private final ObservacoesDeAcaoRepository repository;

@@ -16,9 +16,12 @@ import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeVenda
 import com.bolsafacil.corretorinteligente.repositorios.MonitoramentosRepository;
 import com.bolsafacil.corretorinteligente.services.RegrasDeNegociacaoService;
 
+import org.springframework.stereotype.Component;
+
 /**
  * RegrasDeNegociacaoService
  */
+@Component
 public class RegrasDeNegociacaoServiceImpl implements RegrasDeNegociacaoService {
 
     private final MonitoramentosRepository repoMonitoramentos;
