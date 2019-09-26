@@ -13,7 +13,7 @@ import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
 import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeCompra;
 import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeNegociacao;
 import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeVenda;
-import com.bolsafacil.corretorinteligente.repositorios.MonitoramentosRepository;
+import com.bolsafacil.corretorinteligente.services.MonitoramentosService;
 import com.bolsafacil.corretorinteligente.services.RegrasDeNegociacaoService;
 
 import org.springframework.stereotype.Component;
@@ -24,10 +24,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class RegrasDeNegociacaoServiceImpl implements RegrasDeNegociacaoService {
 
-    private final MonitoramentosRepository repoMonitoramentos;
+    private final MonitoramentosService serviceMonitoramentos;
 
-    public RegrasDeNegociacaoServiceImpl(MonitoramentosRepository repoMonitoramentos) {
-        this.repoMonitoramentos = repoMonitoramentos;
+    public RegrasDeNegociacaoServiceImpl(MonitoramentosService repoMonitoramentos) {
+        this.serviceMonitoramentos = repoMonitoramentos;
     }
 
     Collection<RegraDeNegociacao> regrasMonitoradas;
@@ -40,7 +40,7 @@ public class RegrasDeNegociacaoServiceImpl implements RegrasDeNegociacaoService 
     }
 
     private Collection<RegraDeNegociacao> definirRegrasMonitoradas() {
-        var monitoramentos = repoMonitoramentos.listar();
+        var monitoramentos = serviceMonitoramentos.listarMonitoramentos();
         return monitoramentos.stream()
                  .flatMap(mnt -> criarRegra(mnt))
                  .collect(toList());

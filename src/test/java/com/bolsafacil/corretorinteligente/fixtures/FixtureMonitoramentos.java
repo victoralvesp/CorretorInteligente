@@ -7,13 +7,19 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.bolsafacil.corretorinteligente.domain.Monitoramento;
-import com.bolsafacil.corretorinteligente.repositorios.MonitoramentosRepository;
+import com.bolsafacil.corretorinteligente.entities.MonitoramentosDataEntity;
+import com.bolsafacil.corretorinteligente.repositorios.MonitoramentosDataRepository;
+import com.bolsafacil.corretorinteligente.services.MonitoramentosService;
 
 import org.mockito.Mockito;
+
+import javassist.NotFoundException;
 
 /**
  * FixtureMonitoramentos
@@ -21,6 +27,7 @@ import org.mockito.Mockito;
 public class FixtureMonitoramentos {
 
     Set<Monitoramento> monitoramentosSalvos;
+    Set<MonitoramentosDataEntity> monitoramentosSalvosData;
     private final Random idGenerator = new Random();
 
     public Monitoramento criarNovoMonitoramento() {
@@ -32,13 +39,13 @@ public class FixtureMonitoramentos {
     public Monitoramento criarNovoMonitoramento(String empresa) {
         var precoVenda = new BigDecimal("11.00");
         var precoCompra = new BigDecimal("10.00");
-        
+
         return this.criarNovoMonitoramento(empresa, precoCompra, precoVenda);
     }
 
     public Monitoramento criarNovoMonitoramento(BigDecimal precoCompra, BigDecimal precoVenda) {
         var empresa = "Intel";
-        
+
         return this.criarNovoMonitoramento(empresa, precoCompra, precoVenda);
     }
 
@@ -53,6 +60,7 @@ public class FixtureMonitoramentos {
         var monitoramentos = new Monitoramento[] {};
         this.preencherMonitoramentos(qtde, monitoramentos);
     }
+
     public void preencherMonitoramentos(Monitoramento... seed) {
         this.preencherMonitoramentos(0, seed);
     }
@@ -64,33 +72,65 @@ public class FixtureMonitoramentos {
             monitoramentos.add(monitoramento);
         }
         monitoramentosSalvos = new HashSet<>(monitoramentos);
+        monitoramentosSalvosData = monitoramentosSalvos.stream().map(mon -> MonitoramentosDataEntity.converterDe(mon))
+                                                                .collect(Collectors.toSet());
     }
 
-    
+    public MonitoramentosService criarMockMonitoramentosServices() throws NotFoundException {
+        var repoMock = Mockito.mock(MonitoramentosService.class);
+        when(repoMock.salvarMonitoramento(any(Monitoramento.class)))
+                .thenAnswer(monArg -> adicionarMonitoramento(monArg.getArguments()[0]));
 
-    public MonitoramentosRepository criarMockMonitoramentosRepository() {
-        var repoMock = Mockito.mock(MonitoramentosRepository.class);
-        when(repoMock.incluir(any(Monitoramento.class))).thenAnswer(monArg -> adicionarMonitoramento(monArg.getArguments()[0]));
+        when(repoMock.listarMonitoramentos()).thenAnswer(i -> getMonitoramentosSalvos());
 
-        when(repoMock.listar()).thenAnswer(i -> getMonitoramentosSalvos());
-
-        when(repoMock.alterarParaExcluido(any(Monitoramento.class))).thenAnswer(an -> {
-            var monitoramento = (Monitoramento) an.getArguments()[0];
-
+        when(repoMock.excluirMonitoramento(any(String.class))).thenAnswer(an -> {
+            var empresa = (String) an.getArguments()[0];
+            var monitoramento = find(empresa);
+            
             monitoramento.setExcluido(true);
             return monitoramento;
         });
-        when(repoMock.buscar(any(String.class))).thenAnswer(an -> {
-            var empresa = an.getArguments()[0];
-            for(Monitoramento m : getMonitoramentosSalvos()) {
-                if(m.getEmpresa().equals(empresa)) {
-                    return m;
-                }
-            }
-            return null;
+        when(repoMock.buscarMonitoramento(any(String.class))).thenAnswer(an -> {
+            var empresa = (String)an.getArguments()[0];
+            return find(empresa);
         });
 
         return repoMock;
+    }
+
+    public MonitoramentosDataRepository criarMockMonitoramentosRepository() throws NotFoundException {
+        var repoMock = Mockito.mock(MonitoramentosDataRepository.class);
+        when(repoMock.save(any(MonitoramentosDataEntity.class)))
+                .thenAnswer(monArg -> adicionarMonitoramentoData(monArg.getArguments()[0]));
+
+        when(repoMock.findAll()).thenAnswer(i -> getMonitoramentosSalvosData());
+
+        when(repoMock.findById(any(String.class))).thenAnswer(an -> {
+            var empresa = (String) an.getArguments()[0];
+            var monitoramento = findData(empresa);
+            
+            
+            return Optional.of(monitoramento);
+        });
+
+        return repoMock;
+    }
+
+    private Monitoramento find(String empresa) {
+        for (Monitoramento m : getMonitoramentosSalvos()) {
+            if (m.getEmpresa().equals(empresa)) {
+                return m;
+            }
+        }
+        return null;
+    }
+    private MonitoramentosDataEntity findData(String empresa) {
+        for (MonitoramentosDataEntity m : monitoramentosSalvosData) {
+            if (m.getEmpresa().equals(empresa)) {
+                return m;
+            }
+        }
+        return null;
     }
  
     private Monitoramento adicionarMonitoramento(Object object) {
@@ -100,8 +140,19 @@ public class FixtureMonitoramentos {
 
         return monitoramentoAAdicionar;
     }
+    private MonitoramentosDataEntity adicionarMonitoramentoData(Object object) {
+        var monitoramentoAAdicionar = (MonitoramentosDataEntity) object;
+        var objetoJaSalvo = findData(monitoramentoAAdicionar.getEmpresa());
+        if(objetoJaSalvo == null)
+            monitoramentosSalvosData.add(monitoramentoAAdicionar);
+
+        return monitoramentoAAdicionar;
+    }
 
     public Set<Monitoramento> getMonitoramentosSalvos() {
         return monitoramentosSalvos;
+    }
+    public Set<MonitoramentosDataEntity> getMonitoramentosSalvosData() {
+        return monitoramentosSalvosData;
     }
 }

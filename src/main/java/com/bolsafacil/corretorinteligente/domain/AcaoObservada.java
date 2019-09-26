@@ -18,7 +18,7 @@ public class AcaoObservada {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    long id;
+    Long id;
 
     @Column(nullable = false)
     String empresa;    
@@ -63,6 +63,20 @@ public class AcaoObservada {
      */
     public BigDecimal getPrecoVenda() {
         return precoVenda;
+    }
+
+    /**
+     * @return obtem data do evento
+     */
+    public LocalDateTime getData() {
+        return data;
+    }
+
+    /**
+     * @param data atualiza data do evento
+     */
+    public void setData(LocalDateTime data) {
+        this.data = data;
     }
     
 }

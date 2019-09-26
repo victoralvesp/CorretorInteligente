@@ -6,12 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
 import com.bolsafacil.corretorinteligente.DefinicoesDoServidor;
 import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
 
@@ -24,7 +18,6 @@ public class ContaPessoal extends ContaBase {
 
     String email;
     
-    //@OneToMany(cascade = CascadeType.ALL)
     private Collection<ContaDeAcao> contasDeAcao;
 
     public ContaPessoal(String email, BigDecimal saldoInicial) {

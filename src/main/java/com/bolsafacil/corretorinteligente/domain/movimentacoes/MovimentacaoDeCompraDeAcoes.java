@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
-import com.bolsafacil.corretorinteligente.domain.contas.Conta;
+import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
 
 /**
  * MovimentacaoDeCompraDeAcoes
@@ -15,10 +15,11 @@ public class MovimentacaoDeCompraDeAcoes implements MovimentacaoDeConta {
     private final String empresaDasAcoes;
     private final BigDecimal quantidadeDeAcoesCompradas;
     private final LocalDateTime dataDaCompra;
-    private Conta conta;
+    private ContaPessoal conta;
+    private long id;
 
     public MovimentacaoDeCompraDeAcoes(BigDecimal valorTotalMovimentado, LocalDateTime dataDaCompra,
-        BigDecimal quantidadeDeAcoesCompradas, String empresa, Conta conta) {
+        BigDecimal quantidadeDeAcoesCompradas, String empresa, ContaPessoal conta) {
         this.quantidadeDeAcoesCompradas = quantidadeDeAcoesCompradas;
         this.dataDaCompra = dataDaCompra;
         this.valorComprado = valorTotalMovimentado;
@@ -52,8 +53,16 @@ public class MovimentacaoDeCompraDeAcoes implements MovimentacaoDeConta {
     }
 
     @Override
-    public Conta getContaMovimentada() {
+    public ContaPessoal getContaMovimentada() {
         return conta;
+    }
+
+    /**
+     * @return the id
+     */
+    @Override
+    public long getId() {
+        return id;
     }
 
     

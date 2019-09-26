@@ -3,14 +3,6 @@ package com.bolsafacil.corretorinteligente.domain;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
 // @Entity
 // @Table(name = "eventos_de_observacao_de_acoes")
 public class ObservacaoDeAcoes {

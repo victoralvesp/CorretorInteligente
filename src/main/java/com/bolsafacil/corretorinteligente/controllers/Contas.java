@@ -27,9 +27,6 @@ public class Contas {
     @Autowired
     ContasService service;
 
-    @Autowired
-    ContasRepository repoContas; 
-
     @GetMapping(
         value="/contas",
         produces = "application/json"

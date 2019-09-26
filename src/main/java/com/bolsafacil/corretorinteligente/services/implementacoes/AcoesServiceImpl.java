@@ -1,9 +1,11 @@
 package com.bolsafacil.corretorinteligente.services.implementacoes;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import com.bolsafacil.corretorinteligente.DefinicoesDoServidor;
-import com.bolsafacil.corretorinteligente.domain.ObservacaoDeAcoes;
+import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
 import com.bolsafacil.corretorinteligente.repositorios.ObservacoesDeAcaoRepository;
 import com.bolsafacil.corretorinteligente.services.AcoesService;
 
@@ -24,30 +26,31 @@ public class AcoesServiceImpl implements AcoesService {
     }
 
     @Override
-    public ObservacaoDeAcoes registrarObservacaoDeAcoes(ObservacaoDeAcoes monitoramento) {
+    public AcaoObservada registrarObservacaoDeAcoes(AcaoObservada monitoramento) {
         var dataAtual = DefinicoesDoServidor.getDataAtual();
-        monitoramento.setDataRegistro(dataAtual);
+        monitoramento.setData(dataAtual);
 
-        var monitoramentoSalvo = repository.salvar(monitoramento);
+        var monitoramentoSalvo = repository.save(monitoramento);
 
         return monitoramentoSalvo;
     }
 
     @Override
-    public Collection<ObservacaoDeAcoes> listarObservacoesRealizadas() {
+    public Collection<AcaoObservada> listarObservacoesRealizadas() {
         
-        var monitoramentosSalvos = repository.listar();
+        var monitoramentosSalvos = repository.findAll();
 
-        return monitoramentosSalvos;
+        return StreamSupport.stream(monitoramentosSalvos.spliterator(), false)
+                            .collect(Collectors.toList());
     }
 
     @Override
-    public ObservacaoDeAcoes buscar(long id) throws NotFoundException{
-        var monitoramentoBuscado = repository.buscar(id);
+    public AcaoObservada buscar(long id) throws NotFoundException{
+        var monitoramentoBuscado = repository.findById(id);
 
-        if(monitoramentoBuscado == null)
+        if(!monitoramentoBuscado.isPresent())
             throw new NotFoundException("Não foi possível encontrar o monitoramento buscado");
 
-        return monitoramentoBuscado;
+        return monitoramentoBuscado.get();
     }
 }

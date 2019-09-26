@@ -2,7 +2,7 @@ package com.bolsafacil.corretorinteligente.services;
 
 import java.util.Collection;
 
-import com.bolsafacil.corretorinteligente.domain.ObservacaoDeAcoes;
+import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
 
 import javassist.NotFoundException;
 
@@ -10,7 +10,7 @@ import javassist.NotFoundException;
  * MonitorService
  */
 public interface AcoesService {
-	public ObservacaoDeAcoes registrarObservacaoDeAcoes(ObservacaoDeAcoes monitoramento);
-	public Collection<ObservacaoDeAcoes> listarObservacoesRealizadas();
-	public ObservacaoDeAcoes buscar(long id) throws NotFoundException;
+	public AcaoObservada registrarObservacaoDeAcoes(AcaoObservada observacao);
+	public Collection<AcaoObservada> listarObservacoesRealizadas();
+	public AcaoObservada buscar(long id) throws NotFoundException;
 }

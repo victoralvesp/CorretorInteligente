@@ -14,5 +14,5 @@ public interface ContasService {
 
 	ContaPessoal inserir(ContaPessoal contaConvertida);
 
-	void salvar(Conta... contas);
+	void salvar(ContaPessoal... contas);
 }

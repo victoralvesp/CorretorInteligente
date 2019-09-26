@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.Random;
 
 import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
-import com.bolsafacil.corretorinteligente.domain.contas.Conta;
 import com.bolsafacil.corretorinteligente.domain.contas.ContaDeAcao;
 import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
 import com.bolsafacil.corretorinteligente.domain.movimentacoes.MovimentacaoDeCompraDeAcoes;
@@ -53,13 +52,13 @@ public class FixtureContas {
         return criarVendaComValorDe(empresa, valorVendido, conta);
     }
 
-    public MovimentacaoDeConta criarVendaComValorDe(String val, Conta conta) {
+    public MovimentacaoDeConta criarVendaComValorDe(String val, ContaPessoal conta) {
         var valorVendido = new BigDecimal(val);
         var empresa = "Intel";
         return criarVendaComValorDe(empresa, valorVendido, conta);
     }
 
-    private MovimentacaoDeConta criarVendaComValorDe(String empresa, BigDecimal valorVendido, Conta conta) {
+    private MovimentacaoDeConta criarVendaComValorDe(String empresa, BigDecimal valorVendido, ContaPessoal conta) {
         var data = LocalDateTime.now();
         var quantidade = new BigDecimal("10");
         var movimentacao = new MovimentacaoDeVendaDeAcoes(valorVendido, data, quantidade, empresa, conta);
@@ -71,7 +70,7 @@ public class FixtureContas {
         return criarCompraComValorDe(val, empresa);
     }
 
-    public MovimentacaoDeConta criarCompraComValorDe(String val, Conta conta) {
+    public MovimentacaoDeConta criarCompraComValorDe(String val, ContaPessoal conta) {
         var empresa = "Intel";
         var data = LocalDateTime.now();
         var quantidade = new BigDecimal("10");
@@ -85,7 +84,7 @@ public class FixtureContas {
         return criarCompraComValorDe(val, empresa, conta, data, quantidade);
     }
 
-    private MovimentacaoDeConta criarCompraComValorDe(String val, String empresa, Conta conta, LocalDateTime data, BigDecimal quantidade) {
+    private MovimentacaoDeConta criarCompraComValorDe(String val, String empresa, ContaPessoal conta, LocalDateTime data, BigDecimal quantidade) {
         var valorVendido = new BigDecimal(val);
         var movimentacao = new MovimentacaoDeCompraDeAcoes(valorVendido, data, quantidade, empresa, conta);
         return movimentacao;
@@ -120,8 +119,13 @@ public class FixtureContas {
             }
 
             @Override
-            public Conta getContaMovimentada() {
+            public ContaPessoal getContaMovimentada() {
                 return null;
+            }
+
+            @Override
+            public long getId() {
+                return 0;
             }
         };
     }

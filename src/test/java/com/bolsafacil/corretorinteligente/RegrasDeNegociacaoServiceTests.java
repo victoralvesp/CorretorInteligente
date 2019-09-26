@@ -11,12 +11,14 @@ import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeCompr
 import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeVenda;
 import com.bolsafacil.corretorinteligente.fixtures.FixtureContas;
 import com.bolsafacil.corretorinteligente.fixtures.FixtureMonitoramentos;
-import com.bolsafacil.corretorinteligente.repositorios.MonitoramentosRepository;
+import com.bolsafacil.corretorinteligente.services.MonitoramentosService;
 import com.bolsafacil.corretorinteligente.services.RegrasDeNegociacaoService;
 import com.bolsafacil.corretorinteligente.services.implementacoes.RegrasDeNegociacaoServiceImpl;
 
 import org.assertj.core.api.Condition;
 import org.junit.Test;
+
+import javassist.NotFoundException;
 
 /**
  * RegrasDeNegociacaoServiceTests
@@ -24,13 +26,13 @@ import org.junit.Test;
 public class RegrasDeNegociacaoServiceTests {
 
     @Test
-    public void deveCriarUmaRegraDeCompraParaUmMonitoramentoComPrecoDeCompraPositivoSalvo() {
+    public void deveCriarUmaRegraDeCompraParaUmMonitoramentoComPrecoDeCompraPositivoSalvo() throws NotFoundException {
         // Arrange
         var fixtureDB = new FixtureMonitoramentos();
         var precoCompra = new BigDecimal("10.00");
         var monitoramentoComCompra = fixtureDB.criarNovoMonitoramento(precoCompra, null);
         fixtureDB.preencherMonitoramentos(monitoramentoComCompra);
-        var repo = fixtureDB.criarMockMonitoramentosRepository();
+        var repo = fixtureDB.criarMockMonitoramentosServices();
         var service = criarService(repo);
 
         //Act
@@ -41,13 +43,13 @@ public class RegrasDeNegociacaoServiceTests {
         assertThat(regras).extracting(regra -> regra).areExactly(1, ehRegraDeCompra);
     }
     @Test
-    public void deveCriarUmaRegraDeVendaParaUmMonitoramentoComPrecoDeVendaPositivoSalvo() {
+    public void deveCriarUmaRegraDeVendaParaUmMonitoramentoComPrecoDeVendaPositivoSalvo() throws NotFoundException {
         // Arrange
         var fixtureDB = new FixtureMonitoramentos();
         var precoVenda = new BigDecimal("10.00");
         var monitoramentoComVenda = fixtureDB.criarNovoMonitoramento(null, precoVenda);
         fixtureDB.preencherMonitoramentos(monitoramentoComVenda);
-        var repo = fixtureDB.criarMockMonitoramentosRepository();
+        var repo = fixtureDB.criarMockMonitoramentosServices();
         var service = criarService(repo);
 
         //Act
@@ -59,7 +61,7 @@ public class RegrasDeNegociacaoServiceTests {
     }
 
     @Test
-    public void naoDeveManterContaDeAcaoComSaldoNegativo() {
+    public void naoDeveManterContaDeAcaoComSaldoNegativo() throws NotFoundException {
         //Arrange
         var fixtureDB = new FixtureMonitoramentos();
         var fixtureDBContas = new FixtureContas();
@@ -70,7 +72,7 @@ public class RegrasDeNegociacaoServiceTests {
         var empresa = monitoramentoComVenda.getEmpresa();
         fixtureDB.preencherMonitoramentos(monitoramentoComVenda);
         var observacaoDeAcao = new AcaoObservada(empresa, BigDecimal.valueOf(100000), precoVenda.multiply(new BigDecimal(2)));
-        var service = criarService(fixtureDB.criarMockMonitoramentosRepository());
+        var service = criarService(fixtureDB.criarMockMonitoramentosServices());
         //Act
         var movimentacoesDeConta = service.aplicarRegrasDeNegociacao(observacaoDeAcao);
         contaDoMonitoramento.registrarMovimentacoes(movimentacoesDeConta.toArray(new MovimentacaoDeConta[] { }));
@@ -80,7 +82,7 @@ public class RegrasDeNegociacaoServiceTests {
                                         .allMatch(saldo -> saldo.compareTo(BigDecimal.ZERO) >= 0);
     } 
 
-    private RegrasDeNegociacaoService criarService(MonitoramentosRepository repo) {
+    private RegrasDeNegociacaoService criarService(MonitoramentosService repo) {
         return new RegrasDeNegociacaoServiceImpl(repo);
     }
 }

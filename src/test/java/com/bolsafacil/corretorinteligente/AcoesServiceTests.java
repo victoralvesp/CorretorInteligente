@@ -36,7 +36,7 @@ public class AcoesServiceTests {
         // Act
         var monitoramentoRegistrado = monitorService.registrarObservacaoDeAcoes(monitoramento);
         // Assert
-        assertTrue("message", monitoramentoRegistrado.getDataRegistro().compareTo(dataAtual) >= 0);
+        assertTrue("message", monitoramentoRegistrado.getData().compareTo(dataAtual) >= 0);
     }
 
     @Test
@@ -51,20 +51,4 @@ public class AcoesServiceTests {
         // Assert
         assertTrue("Os monitoramentos não foram listados corretamente", monitoramentos.size() == qtde);
     }
-
-    @Test
-    public void deveObterApenasMonitoramentoBuscado() throws NotFoundException {
-        //Arrange
-        int qtde = 10;
-        var monitoramentoAlvo = fixtureDB.criarNovaObservacao();
-        var idAlvo = monitoramentoAlvo.getId();
-        fixtureDB.preencherObservacoes(qtde, monitoramentoAlvo);
-
-        //Act
-        var monitoramentoBuscado = monitorService.buscar(idAlvo);
-
-        //Assert
-        assertTrue("Monitoramento buscado não é o mesmo do Alvo", monitoramentoAlvo.equals(monitoramentoBuscado));
-    }
-
 }

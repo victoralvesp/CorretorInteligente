@@ -6,8 +6,7 @@ import static org.springframework.http.ResponseEntity.ok;
 import com.bolsafacil.corretorinteligente.controllers.dtos.AcaoObservadaDto;
 import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
 import com.bolsafacil.corretorinteligente.domain.contas.Conta;
-import com.bolsafacil.corretorinteligente.repositorios.ContasRepository;
-import com.bolsafacil.corretorinteligente.repositorios.MonitoramentosRepository;
+import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
 import com.bolsafacil.corretorinteligente.services.ContasService;
 import com.bolsafacil.corretorinteligente.services.RegrasDeNegociacaoService;
 
@@ -45,7 +44,7 @@ public class ObservadorDeAcoes {
             var movimentacoesDeConta = service.aplicarRegrasDeNegociacao(acaoConvertida);
             var contasMovimentadas = movimentacoesDeConta.stream().map(mov -> mov.getContaMovimentada());
             contasMovimentadas.forEach(conta -> conta.registrarMovimentacoes(movimentacoesDeConta.toArray(MovimentacaoDeConta[]::new)));
-            serviceContas.salvar(contasMovimentadas.toArray(Conta[]::new));
+            serviceContas.salvar(contasMovimentadas.toArray(ContaPessoal[]::new));
             return ok(movimentacoesDeConta);
         } catch (Exception e) {
             return badRequest().body(e.getMessage());

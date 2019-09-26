@@ -4,7 +4,6 @@ import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
 import com.bolsafacil.corretorinteligente.controllers.dtos.MonitoramentoDto;
-import com.bolsafacil.corretorinteligente.repositorios.MonitoramentosRepository;
 import com.bolsafacil.corretorinteligente.services.MonitoramentosService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +29,6 @@ public class Monitoramentos {
 
     @Autowired
     MonitoramentosService service;
-
-    @Autowired
-    MonitoramentosRepository repoMonitoramentos; 
 
     @GetMapping(
         value="/monitoramentos/",

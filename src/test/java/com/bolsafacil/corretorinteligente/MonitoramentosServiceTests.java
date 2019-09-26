@@ -11,17 +11,18 @@ import com.bolsafacil.corretorinteligente.services.implementacoes.Monitoramentos
 import org.junit.Before;
 import org.junit.Test;
 
+import javassist.NotFoundException;
+
 /**
  * MonitoramentosServiceTests
  */
 public class MonitoramentosServiceTests {
 
-    
     private FixtureMonitoramentos fixtureDB;
     private MonitoramentosService monitoramentosService;
 
     @Before
-    public void setup() {
+    public void setup() throws NotFoundException {
         fixtureDB = new FixtureMonitoramentos();
         var repositorio = fixtureDB.criarMockMonitoramentosRepository();
         monitoramentosService = new MonitoramentosServiceImpl(repositorio);

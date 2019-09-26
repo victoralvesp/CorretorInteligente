@@ -7,7 +7,7 @@ import com.bolsafacil.corretorinteligente.DefinicoesDoServidor;
 import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
 import com.bolsafacil.corretorinteligente.domain.Monitoramento;
 import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
-import com.bolsafacil.corretorinteligente.domain.contas.Conta;
+import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
 import com.bolsafacil.corretorinteligente.domain.movimentacoes.MovimentacaoDeCompraDeAcoes;
 
 /**
@@ -60,7 +60,7 @@ public class RegraDeCompra implements RegraDeNegociacao {
         return precoCompraObservado.compareTo(precoDesejado) <= 0;
     }
 
-    private Conta getContaDoMonitoramento() {
+    private ContaPessoal getContaDoMonitoramento() {
         return monitoramentoDaRegra.getConta();
     }
     

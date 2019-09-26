@@ -42,6 +42,14 @@ public class ContaDeAcaoDataEntity {
         return new ContaDeAcaoImpl(quantidadeDisponivel, dataUltimaAtualizacao, empresa, id);
     }
 
+    public static ContaDeAcaoDataEntity converterDe(ContaDeAcao conta) {
+        var contaEntity = new ContaDeAcaoDataEntity();
+        contaEntity.dataUltimaAtualizacao = conta.getDataUltimaAtualizacao();
+        contaEntity.empresa = conta.getEmpresaDaAcao();
+        contaEntity.id = conta.getId();
+        contaEntity.quantidadeDisponivel = conta.getSaldoAtual();
 
+        return contaEntity;
+    }
 
 }

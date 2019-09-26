@@ -40,6 +40,18 @@ public class MonitoramentosDataEntity {
         return monitoramento;
     }
 
+    public static MonitoramentosDataEntity converterDe(Monitoramento monitoramento) {
+        var monitoramentoEntity = new MonitoramentosDataEntity();
+
+        monitoramentoEntity.conta = ContaDataEntity.converterDe(monitoramento.getConta());
+        monitoramentoEntity.empresa = monitoramento.getEmpresa();
+        monitoramentoEntity.excluido = monitoramento.getExcluido();
+        monitoramentoEntity.precoCompra = monitoramento.getPrecoCompra();
+        monitoramentoEntity.precoVenda = monitoramento.getPrecoVenda();
+
+        return monitoramentoEntity;
+    }
+
     /**
      * @return a empresa da acao
      */

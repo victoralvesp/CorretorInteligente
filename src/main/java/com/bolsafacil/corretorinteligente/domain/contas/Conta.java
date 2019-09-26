@@ -9,7 +9,7 @@ import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
  * Conta
  */
 public interface Conta {
-
+    public long getId();
     public BigDecimal getSaldoAtual();
     public void registrarMovimentacoes(MovimentacaoDeConta... movimentacoes);
 	public LocalDateTime getDataUltimaAtualizacao();

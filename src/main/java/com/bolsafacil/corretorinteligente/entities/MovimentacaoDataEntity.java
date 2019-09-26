@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
 import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
 import com.bolsafacil.corretorinteligente.domain.contas.Conta;
+import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
 import com.bolsafacil.corretorinteligente.domain.movimentacoes.MovimentacaoDeCompraDeAcoes;
 import com.bolsafacil.corretorinteligente.domain.movimentacoes.MovimentacaoDeVendaDeAcoes;
 import com.bolsafacil.corretorinteligente.domain.movimentacoes.TipoMovimentacao;
@@ -50,6 +51,22 @@ public class MovimentacaoDataEntity {
     @Column(name = "data_movimentacao")
     LocalDateTime dataMovimentacao;
     
+
+    public MovimentacaoDataEntity converterDe(MovimentacaoDeConta modelo) {
+        if(modelo == null) {
+            return null;
+        }
+
+        var entity = new MovimentacaoDataEntity();
+        entity.dataMovimentacao = modelo.getDataMovimentacao();
+        entity.empresa = modelo.getEmpresaDaAcaoMovimentada();
+        entity.id = modelo.getId();
+
+        entity.conta = ContaDataEntity.converterDe(modelo.getContaMovimentada());
+
+        return entity;
+    }
+
 
     public MovimentacaoDeConta converterParaModelo() {
         var tipoDeMovimentacao = definirTipoMovimentacao();
@@ -103,8 +120,13 @@ public class MovimentacaoDataEntity {
             }
         
             @Override
-            public Conta getContaMovimentada() {
-                return conta.converterParaModelo();
+            public ContaPessoal getContaMovimentada() {
+                return contaConvertida;
+            }
+
+            @Override
+            public long getId() {
+                return id;
             }
         };
     }

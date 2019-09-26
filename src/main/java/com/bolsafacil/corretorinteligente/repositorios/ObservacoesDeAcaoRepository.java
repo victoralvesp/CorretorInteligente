@@ -1,17 +1,13 @@
 package com.bolsafacil.corretorinteligente.repositorios;
 
-import java.util.Collection;
+import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
 
-import com.bolsafacil.corretorinteligente.domain.ObservacaoDeAcoes;
+import org.springframework.data.repository.CrudRepository;
 
 /**
  * MonitoramentosRepository
  */
-public interface ObservacoesDeAcaoRepository {
+public interface ObservacoesDeAcaoRepository extends CrudRepository<AcaoObservada, Long> {
 
-    public ObservacaoDeAcoes salvar(ObservacaoDeAcoes monitoramento);
 
-    public Collection<ObservacaoDeAcoes> listar();
-
-    public ObservacaoDeAcoes buscar(long id);
 }

@@ -12,7 +12,7 @@ import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
  * ContaImpl
  */
 public abstract class ContaBase implements Conta {
-
+    long id;
     LocalDateTime dataUltimaAtualizacaoSalva;
 
     BigDecimal saldoDisponivelInicial;
@@ -82,6 +82,11 @@ public abstract class ContaBase implements Conta {
                                        .orElse(this.dataUltimaAtualizacaoSalva);
     }
 
-
-    
+    /**
+     * @return the id
+     */
+    @Override
+    public long getId() {
+        return id;
+    }
 }

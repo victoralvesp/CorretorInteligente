@@ -1,15 +1,14 @@
 package com.bolsafacil.corretorinteligente.entities;
 
-import static java.util.stream.Collectors.toList;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,7 +29,7 @@ public class ContaDataEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    long id;
+    Long id;
 
     @Column(nullable = false)
     String email;
@@ -41,7 +40,7 @@ public class ContaDataEntity {
     @Column(nullable = false, name = "saldo_disponivel")
     BigDecimal saldoDisponivel;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     Set<ContaDeAcaoDataEntity> contasDeAcao;
 
 
@@ -54,6 +53,24 @@ public class ContaDataEntity {
         }   
 
         return new ContaPessoal(email, saldoDisponivel, dataUltimaAtualizacao, contasDeAcaoConvertidas, id);
+    }
+
+    public static ContaDataEntity converterDe(ContaPessoal conta) {
+        var contasDeAcaoMaybe = Optional.of(conta.getContasDeAcao());
+
+        var contaEntity = new ContaDataEntity();
+        contasDeAcaoMaybe.ifPresent(contas -> {
+            contaEntity.contasDeAcao = contas.stream().map(contaDeAcao -> ContaDeAcaoDataEntity.converterDe(contaDeAcao))
+                                                    .collect(Collectors.toSet());
+                                                
+        });
+
+        contaEntity.id = conta.getId();
+        contaEntity.dataUltimaAtualizacao = conta.getDataUltimaAtualizacao();
+        contaEntity.email = conta.getEmail();
+        contaEntity.saldoDisponivel = conta.getSaldoAtual();
+
+        return contaEntity;
     }
 
 

@@ -39,6 +39,8 @@ public class ContaDeAcaoImpl extends ContaBase implements ContaDeAcao {
         return empresaDaAcao;
     }
 
+    
+
     @Override
     protected boolean movimentacaoPodeAlterarEstaConta(MovimentacaoDeConta movimentacao) {
         return movimentacao.getEmpresaDaAcaoMovimentada().equals(this.empresaDaAcao);
