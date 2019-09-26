@@ -1,6 +1,7 @@
 package com.bolsafacil.corretorinteligente.fixtures;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -43,6 +44,13 @@ public class FixtureMonitoramentos {
         return this.criarNovoMonitoramento(empresa, precoCompra, precoVenda);
     }
 
+    public Monitoramento criarNovoMonitoramento(String empresa, long id) {
+        var precoVenda = new BigDecimal("11.00");
+        var precoCompra = new BigDecimal("10.00");
+
+        return this.criarNovoMonitoramento(empresa, precoCompra, precoVenda, id);
+    }
+
     public Monitoramento criarNovoMonitoramento(BigDecimal precoCompra, BigDecimal precoVenda) {
         var empresa = "Intel";
 
@@ -50,7 +58,12 @@ public class FixtureMonitoramentos {
     }
 
     public Monitoramento criarNovoMonitoramento(String empresa, BigDecimal precoCompra, BigDecimal precoVenda) {
-        var monitoramento = new Monitoramento(empresa, precoCompra, precoVenda);
+        int id = idGenerator.nextInt(10000);
+        return criarNovoMonitoramento(empresa, precoCompra, precoVenda, id);
+    }
+
+    private Monitoramento criarNovoMonitoramento(String empresa, BigDecimal precoCompra, BigDecimal precoVenda, long id) {
+        var monitoramento = new Monitoramento(empresa, precoCompra, precoVenda, id);
         var conta = new FixtureContas().criarContaPessoalPreenchida();
         monitoramento.setConta(conta);
         return monitoramento;
@@ -78,19 +91,19 @@ public class FixtureMonitoramentos {
 
     public MonitoramentosService criarMockMonitoramentosServices() throws NotFoundException {
         var repoMock = Mockito.mock(MonitoramentosService.class);
-        when(repoMock.salvarMonitoramento(any(Monitoramento.class)))
+        when(repoMock.salvarMonitoramento(any(Monitoramento.class), anyLong()))
                 .thenAnswer(monArg -> adicionarMonitoramento(monArg.getArguments()[0]));
 
         when(repoMock.listarMonitoramentos()).thenAnswer(i -> getMonitoramentosSalvos());
 
-        when(repoMock.excluirMonitoramento(any(String.class))).thenAnswer(an -> {
+        when(repoMock.excluirMonitoramento(any(String.class), anyLong())).thenAnswer(an -> {
             var empresa = (String) an.getArguments()[0];
             var monitoramento = find(empresa);
             
             monitoramento.setExcluido(true);
             return monitoramento;
         });
-        when(repoMock.buscarMonitoramento(any(String.class))).thenAnswer(an -> {
+        when(repoMock.buscarMonitoramento(any(String.class), anyLong())).thenAnswer(an -> {
             var empresa = (String)an.getArguments()[0];
             return find(empresa);
         });
@@ -105,8 +118,8 @@ public class FixtureMonitoramentos {
 
         when(repoMock.findAll()).thenAnswer(i -> getMonitoramentosSalvosData());
 
-        when(repoMock.findById(any(String.class))).thenAnswer(an -> {
-            var empresa = (String) an.getArguments()[0];
+        when(repoMock.findById(anyLong())).thenAnswer(an -> {
+            var empresa = (long) an.getArguments()[0];
             var monitoramento = findData(empresa);
             
             
@@ -124,9 +137,9 @@ public class FixtureMonitoramentos {
         }
         return null;
     }
-    private MonitoramentosDataEntity findData(String empresa) {
+    private MonitoramentosDataEntity findData(Long id) {
         for (MonitoramentosDataEntity m : monitoramentosSalvosData) {
-            if (m.getEmpresa().equals(empresa)) {
+            if (m.getId().equals(id)) {
                 return m;
             }
         }
@@ -142,7 +155,7 @@ public class FixtureMonitoramentos {
     }
     private MonitoramentosDataEntity adicionarMonitoramentoData(Object object) {
         var monitoramentoAAdicionar = (MonitoramentosDataEntity) object;
-        var objetoJaSalvo = findData(monitoramentoAAdicionar.getEmpresa());
+        var objetoJaSalvo = findData(monitoramentoAAdicionar.getId());
         if(objetoJaSalvo == null)
             monitoramentosSalvosData.add(monitoramentoAAdicionar);
 

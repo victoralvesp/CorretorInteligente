@@ -6,7 +6,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -20,6 +23,10 @@ import com.bolsafacil.corretorinteligente.domain.Monitoramento;
 public class MonitoramentosDataEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false)
+    Long id;
+
     @Column(nullable = false)
     String empresa;    
     @Column(nullable = false, name = "preco_compra")
@@ -27,7 +34,8 @@ public class MonitoramentosDataEntity {
     @Column(nullable = false, name = "preco_venda")
     BigDecimal precoVenda;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "id_conta")
     ContaDataEntity conta;
 
     @Column(nullable = false)
@@ -35,7 +43,7 @@ public class MonitoramentosDataEntity {
 
     public Monitoramento converterParaModelo() {
         var contaConvertida = conta.converterParaModelo();
-        var monitoramento = new Monitoramento(empresa, precoCompra, precoVenda);
+        var monitoramento = new Monitoramento(empresa, precoCompra, precoVenda, id);
         monitoramento.setConta(contaConvertida);
         return monitoramento;
     }
@@ -48,6 +56,7 @@ public class MonitoramentosDataEntity {
         monitoramentoEntity.excluido = monitoramento.getExcluido();
         monitoramentoEntity.precoCompra = monitoramento.getPrecoCompra();
         monitoramentoEntity.precoVenda = monitoramento.getPrecoVenda();
+        monitoramentoEntity.id = monitoramento.getId();
 
         return monitoramentoEntity;
     }
@@ -99,6 +108,10 @@ public class MonitoramentosDataEntity {
     public void setExcluido(boolean excluido) {
         this.excluido = excluido;
     }
+
+	public Long getId() {
+		return id;
+	}
 
 
   

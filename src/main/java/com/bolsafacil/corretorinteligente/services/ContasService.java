@@ -2,8 +2,9 @@ package com.bolsafacil.corretorinteligente.services;
 
 import java.util.Collection;
 
-import com.bolsafacil.corretorinteligente.domain.contas.Conta;
 import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
+
+import javassist.NotFoundException;
 
 /**
  * ContasService
@@ -14,5 +15,7 @@ public interface ContasService {
 
 	ContaPessoal inserir(ContaPessoal contaConvertida);
 
-	void salvar(ContaPessoal... contas);
+	Collection<ContaPessoal> salvar(ContaPessoal... contas);
+
+	ContaPessoal buscar(long idConta) throws NotFoundException;
 }

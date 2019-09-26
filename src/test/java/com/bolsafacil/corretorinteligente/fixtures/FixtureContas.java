@@ -1,17 +1,25 @@
 package com.bolsafacil.corretorinteligente.fixtures;
 
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Random;
 
+import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
 import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
 import com.bolsafacil.corretorinteligente.domain.contas.ContaDeAcao;
 import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
 import com.bolsafacil.corretorinteligente.domain.movimentacoes.MovimentacaoDeCompraDeAcoes;
 import com.bolsafacil.corretorinteligente.domain.movimentacoes.MovimentacaoDeVendaDeAcoes;
 import com.bolsafacil.corretorinteligente.domain.movimentacoes.TipoMovimentacao;
+import com.bolsafacil.corretorinteligente.services.ContasService;
 
 import org.assertj.core.util.Lists;
+import org.mockito.Mockito;
+
+import javassist.NotFoundException;
 
 /**
  * FixtureContas
@@ -23,13 +31,14 @@ public class FixtureContas {
     }
 
     private Random rand = new Random();
+
     public ContaPessoal criarContaPessoalPreenchida(BigDecimal saldoInicial) {
         var randId = rand.nextInt(10000);
         var email = "bla" + randId + "@domain.com";
         var data = LocalDateTime.now();
         return criarContaPessoalPreenchida(email, saldoInicial, data);
     }
-    
+
     public ContaPessoal criarContaPessoalPreenchida(ContaDeAcao... contasDeAcao) {
         var randId = rand.nextInt(10000);
         var email = "bla" + randId + "@domain.com";
@@ -37,7 +46,8 @@ public class FixtureContas {
         return criarContaPessoalPreenchida(email, BigDecimal.ZERO, data, contasDeAcao);
     }
 
-    public ContaPessoal criarContaPessoalPreenchida(String email, BigDecimal saldo, LocalDateTime data, ContaDeAcao... contas) {
+    public ContaPessoal criarContaPessoalPreenchida(String email, BigDecimal saldo, LocalDateTime data,
+            ContaDeAcao... contas) {
         return new ContaPessoal(email, saldo, data, Lists.list(contas));
     }
 
@@ -84,7 +94,8 @@ public class FixtureContas {
         return criarCompraComValorDe(val, empresa, conta, data, quantidade);
     }
 
-    private MovimentacaoDeConta criarCompraComValorDe(String val, String empresa, ContaPessoal conta, LocalDateTime data, BigDecimal quantidade) {
+    private MovimentacaoDeConta criarCompraComValorDe(String val, String empresa, ContaPessoal conta,
+            LocalDateTime data, BigDecimal quantidade) {
         var valorVendido = new BigDecimal(val);
         var movimentacao = new MovimentacaoDeCompraDeAcoes(valorVendido, data, quantidade, empresa, conta);
         return movimentacao;
@@ -127,7 +138,24 @@ public class FixtureContas {
             public long getId() {
                 return 0;
             }
+
+            @Override
+            public AcaoObservada getAcaoObservada() {
+                return null;
+            }
+
+            @Override
+            public void setAcaoObservada(AcaoObservada acao) {
+
+            }
         };
     }
+
+    public ContasService criarMockContasService() throws NotFoundException {
+        var contasService = Mockito.mock(ContasService.class);
+        
+        when(contasService.buscar(anyLong())).thenAnswer(an -> criarContaPessoalPreenchida()); 
+        return contasService;
+	}
 
 }

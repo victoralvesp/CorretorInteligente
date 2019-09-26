@@ -3,18 +3,17 @@ package com.bolsafacil.corretorinteligente.entities;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
 import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
-import com.bolsafacil.corretorinteligente.domain.contas.Conta;
 import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
 import com.bolsafacil.corretorinteligente.domain.movimentacoes.MovimentacaoDeCompraDeAcoes;
 import com.bolsafacil.corretorinteligente.domain.movimentacoes.MovimentacaoDeVendaDeAcoes;
@@ -35,7 +34,7 @@ public class MovimentacaoDataEntity {
     @JoinColumn(name = "id_conta")
     ContaDataEntity conta;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_gatilho_observacao")
     AcaoObservada observacaoGatilho;
 
@@ -63,6 +62,7 @@ public class MovimentacaoDataEntity {
         entity.id = modelo.getId();
 
         entity.conta = ContaDataEntity.converterDe(modelo.getContaMovimentada());
+        entity.observacaoGatilho = modelo.getAcaoObservada();
 
         return entity;
     }
@@ -82,12 +82,18 @@ public class MovimentacaoDataEntity {
 
     private MovimentacaoDeConta criarVenda() {
         var contaConvertida = conta.converterParaModelo();
-        return new MovimentacaoDeVendaDeAcoes(valorMovimentado, dataMovimentacao, quantidadeDeAcoesMovimentada, empresa, contaConvertida);
+        var movimentacaoDeVendaDeAcoes = new MovimentacaoDeVendaDeAcoes(valorMovimentado,
+                dataMovimentacao, quantidadeDeAcoesMovimentada, empresa, contaConvertida);
+        
+        movimentacaoDeVendaDeAcoes.setAcaoObservada(observacaoGatilho);
+        return movimentacaoDeVendaDeAcoes;
     }
 
     private MovimentacaoDeConta criarCompra() {
         var contaConvertida = conta.converterParaModelo();
-		return new MovimentacaoDeCompraDeAcoes(valorMovimentado, dataMovimentacao, quantidadeDeAcoesMovimentada, empresa, contaConvertida);
+        var modelo = new MovimentacaoDeCompraDeAcoes(valorMovimentado, dataMovimentacao, quantidadeDeAcoesMovimentada, empresa, contaConvertida);
+        modelo.setAcaoObservada(observacaoGatilho);
+		return modelo;
 	}
 
 	private MovimentacaoDeConta criarNeutro() {
@@ -127,6 +133,16 @@ public class MovimentacaoDataEntity {
             @Override
             public long getId() {
                 return id;
+            }
+
+            @Override
+            public AcaoObservada getAcaoObservada() {
+                return observacaoGatilho;
+            }
+
+            @Override
+            public void setAcaoObservada(AcaoObservada acao) {
+                observacaoGatilho = acao;
             }
         };
     }

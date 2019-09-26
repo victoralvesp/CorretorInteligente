@@ -9,6 +9,7 @@ import static com.bolsafacil.corretorinteligente.entities.MonitoramentosDataEnti
 
 import com.bolsafacil.corretorinteligente.domain.Monitoramento;
 import com.bolsafacil.corretorinteligente.repositorios.MonitoramentosDataRepository;
+import com.bolsafacil.corretorinteligente.services.ContasService;
 import com.bolsafacil.corretorinteligente.services.MonitoramentosService;
 
 import org.springframework.stereotype.Component;
@@ -22,18 +23,25 @@ import javassist.NotFoundException;
 public class MonitoramentosServiceImpl implements MonitoramentosService {
 
     private final MonitoramentosDataRepository repoMonitoramentos;
+    private final ContasService serviceConta;
 
-    public MonitoramentosServiceImpl(MonitoramentosDataRepository monitoramentosRepo) {
+    public MonitoramentosServiceImpl(MonitoramentosDataRepository monitoramentosRepo, ContasService service) {
         this.repoMonitoramentos = monitoramentosRepo;
+        serviceConta = service;
     }
 
     @Override
-    public Monitoramento salvarMonitoramento(Monitoramento monitoramento) {
+    public Monitoramento salvarMonitoramento(Monitoramento monitoramento, long idConta) throws NotFoundException {
         var empresaDoMonitoramento = monitoramento.getEmpresa();
-        var monitoramentoJaSalvo = repoMonitoramentos.findById(empresaDoMonitoramento);
-
-        monitoramentoJaSalvo.ifPresent(monitoramentoSalvo -> alterarParaExcluido(monitoramentoSalvo.converterParaModelo()));
-
+        var monitoramentosJaSalvos = repoMonitoramentos.findByEmpresa(empresaDoMonitoramento);
+        if(monitoramentosJaSalvos != null) {
+            monitoramentosJaSalvos.stream()
+                                .filter(mon -> !mon.getExcluido() && mon.getConta().getId() == idConta)
+                                .forEach(monitoramentoSalvo -> alterarParaExcluido(monitoramentoSalvo.converterParaModelo()));
+        }
+        
+        var conta = serviceConta.buscar(idConta);
+        monitoramento.setConta(conta);
         var monitoramentoIncluido = repoMonitoramentos.save(converterDe(monitoramento));
 
         return monitoramentoIncluido.converterParaModelo();
@@ -46,23 +54,26 @@ public class MonitoramentosServiceImpl implements MonitoramentosService {
     }
 
     @Override
-    public Monitoramento buscarMonitoramento(String empresa) throws NotFoundException {
-        var monitoramentoSalvoMaybe = repoMonitoramentos.findById(empresa);
+    public Monitoramento buscarMonitoramento(String empresa, Long idConta) throws NotFoundException {
+        var monitoramentosSalvos = repoMonitoramentos.findByEmpresa(empresa);
         
-        if(!monitoramentoSalvoMaybe.isPresent() || monitoramentoSalvoMaybe.get().getExcluido())
+        if(monitoramentosSalvos == null || monitoramentosSalvos.stream()
+                                            .allMatch(mon-> mon.getExcluido() || mon.getConta().getId() != idConta))
             throw new NotFoundException("Não foi possível encontrar o monitoramento de " + empresa);
 
-        return monitoramentoSalvoMaybe.get().converterParaModelo();
+        return monitoramentosSalvos.stream().findFirst().get().converterParaModelo();
     }
 
     @Override
-    public boolean excluirMonitoramento(String empresa) throws NotFoundException {
-        var monitoramentoSalvoMaybe = repoMonitoramentos.findById(empresa);
+    public boolean excluirMonitoramento(String empresa, Long idConta) throws NotFoundException {
+        var monitoramentosSalvos = repoMonitoramentos.findByEmpresa(empresa);
         
-        if(!monitoramentoSalvoMaybe.isPresent() || monitoramentoSalvoMaybe.get().getExcluido()) {
+        if(monitoramentosSalvos == null || monitoramentosSalvos.stream()
+                                                .allMatch(mon-> mon.getExcluido() || mon.getConta().getId() != idConta)) {
             throw new NotFoundException("Não foi possível encontrar o monitoramento de " + empresa);
         }
-        var monitoramentoSalvo = monitoramentoSalvoMaybe.get();
+        var monitoramentoSalvo = monitoramentosSalvos.stream()
+                                    .filter(mon -> mon.getConta().getId() == idConta).findFirst().get();
 
         var monitoramentoExcluido = alterarParaExcluido(monitoramentoSalvo.converterParaModelo());
 

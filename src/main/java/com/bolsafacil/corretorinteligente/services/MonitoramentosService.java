@@ -11,8 +11,8 @@ import javassist.NotFoundException;
  */
 public interface MonitoramentosService {
 
-    public Monitoramento salvarMonitoramento(Monitoramento monitoramento);
-    public Monitoramento buscarMonitoramento(String empresa) throws NotFoundException;
-    public boolean excluirMonitoramento(String empresa) throws NotFoundException;
+    public Monitoramento salvarMonitoramento(Monitoramento monitoramento, long idConta) throws NotFoundException;
+    public Monitoramento buscarMonitoramento(String empresa, Long idConta) throws NotFoundException;
+    public boolean excluirMonitoramento(String empresa, Long idConta) throws NotFoundException;
     public Collection<Monitoramento> listarMonitoramentos();
 }

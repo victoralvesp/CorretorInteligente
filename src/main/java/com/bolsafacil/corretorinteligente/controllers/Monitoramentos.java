@@ -45,13 +45,13 @@ public class Monitoramentos {
     }
 
     @GetMapping(
-        value="/monitoramentos/{empresa}",
+        value="/contas/{idConta}/monitoramentos/{empresa}",
         produces = "application/json"
     )
     @ResponseBody
-    public ResponseEntity<?> buscar(@PathVariable String empresa) {
+    public ResponseEntity<?> buscar(@PathVariable String empresa, @PathVariable Long idConta) {
         try {
-            var monitoramento = service.buscarMonitoramento(empresa);
+            var monitoramento = service.buscarMonitoramento(empresa, idConta);
             return ok(monitoramento);
         } catch (Exception e) {
             return badRequest().body(e.getMessage());
@@ -59,15 +59,15 @@ public class Monitoramentos {
     }
 
     @PostMapping(
-        value="/monitoramentos/",
+        value="/contas/{idConta}/monitoramentos/",
         consumes = "application/json",
         produces = "application/json"
     )
     @ResponseBody
-    public ResponseEntity<?> inserir(@RequestBody MonitoramentoDto monitoramentoDto) {
+    public ResponseEntity<?> inserir(@RequestBody MonitoramentoDto monitoramentoDto, @PathVariable Long idConta) {
         try {
             var monitoramentoConvertido = monitoramentoDto.converterParaModelo();
-            var monitoramentoSalvo = service.salvarMonitoramento(monitoramentoConvertido);
+            var monitoramentoSalvo = service.salvarMonitoramento(monitoramentoConvertido, idConta);
             return ok(monitoramentoSalvo);
         } catch (Exception e) {
             return badRequest().body(e.getMessage());
@@ -75,15 +75,15 @@ public class Monitoramentos {
     }
 
     @PutMapping(
-        value="/monitoramentos/{empresa}",
+        value="/contas/{idConta}/monitoramentos/{empresa}",
         consumes = "application/json",
         produces = "application/json"
     )
     @ResponseBody
-    public ResponseEntity<?> alterar(@RequestBody MonitoramentoDto monitoramentoDto, @PathVariable String empresa) {
+    public ResponseEntity<?> alterar(@RequestBody MonitoramentoDto monitoramentoDto, @PathVariable String empresa, @PathVariable Long idConta) {
         try {
             var monitoramentoConvertido = monitoramentoDto.converterParaModelo();
-            var monitoramentoSalvo = service.salvarMonitoramento(monitoramentoConvertido);
+            var monitoramentoSalvo = service.salvarMonitoramento(monitoramentoConvertido, idConta);
             return ok(monitoramentoSalvo);
         } catch (Exception e) {
             return badRequest().body(e.getMessage());
@@ -91,14 +91,14 @@ public class Monitoramentos {
     }
 
     @DeleteMapping(
-        value="/monitoramentos/{empresa}",
+        value="/contas/{idConta}/monitoramentos/{empresa}",
         consumes = "application/json",
         produces = "application/json"
     )
     @ResponseBody
-    public ResponseEntity<?> excluir(@PathVariable String empresa) {
+    public ResponseEntity<?> excluir(@PathVariable String empresa, @PathVariable Long idConta) {
         try {
-            var monitoramentoSalvo = service.excluirMonitoramento(empresa);
+            var monitoramentoSalvo = service.excluirMonitoramento(empresa, idConta);
             return ok(monitoramentoSalvo);
         } catch (Exception e) {
             return badRequest().body(e.getMessage());

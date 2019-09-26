@@ -11,8 +11,6 @@ import com.bolsafacil.corretorinteligente.services.implementacoes.AcoesServiceIm
 import org.junit.Before;
 import org.junit.Test;
 
-import javassist.NotFoundException;
-
 /**
  * MonitorServiceTests
  */

@@ -3,6 +3,7 @@ package com.bolsafacil.corretorinteligente.entities;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -11,9 +12,11 @@ import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -40,7 +43,8 @@ public class ContaDataEntity {
     @Column(nullable = false, name = "saldo_disponivel")
     BigDecimal saldoDisponivel;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, insertable = false, updatable = false)
     Set<ContaDeAcaoDataEntity> contasDeAcao;
 
 
@@ -59,11 +63,11 @@ public class ContaDataEntity {
         var contasDeAcaoMaybe = Optional.of(conta.getContasDeAcao());
 
         var contaEntity = new ContaDataEntity();
-        contasDeAcaoMaybe.ifPresent(contas -> {
-            contaEntity.contasDeAcao = contas.stream().map(contaDeAcao -> ContaDeAcaoDataEntity.converterDe(contaDeAcao))
-                                                    .collect(Collectors.toSet());
+        contasDeAcaoMaybe.ifPresentOrElse(contas -> {
+                contaEntity.contasDeAcao = contas.stream().map(contaDeAcao -> ContaDeAcaoDataEntity.converterDe(contaDeAcao))
+                                                .collect(Collectors.toSet());
                                                 
-        });
+            }, () -> contaEntity.contasDeAcao = new HashSet<ContaDeAcaoDataEntity>() );
 
         contaEntity.id = conta.getId();
         contaEntity.dataUltimaAtualizacao = conta.getDataUltimaAtualizacao();
@@ -73,5 +77,11 @@ public class ContaDataEntity {
         return contaEntity;
     }
 
+    /**
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
 
 }

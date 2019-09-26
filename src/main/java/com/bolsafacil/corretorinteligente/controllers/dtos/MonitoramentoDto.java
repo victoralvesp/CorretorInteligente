@@ -13,9 +13,9 @@ public class MonitoramentoDto {
     public BigDecimal precoCompra;
     public BigDecimal precoVenda;
 
-
     public Monitoramento converterParaModelo() {
         var monitoramento = new Monitoramento(empresa, precoCompra, precoVenda);
+        
         return monitoramento;
     }
 }

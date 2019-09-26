@@ -17,4 +17,6 @@ public interface MovimentacaoDeConta {
     public LocalDateTime getDataMovimentacao();
     public TipoMovimentacao getTipoMovimentacao();
     public ContaPessoal getContaMovimentada();
+    public AcaoObservada getAcaoObservada();
+    public void setAcaoObservada(AcaoObservada acao);
 }

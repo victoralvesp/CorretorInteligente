@@ -29,8 +29,6 @@ public class ObservadorDeAcoes {
 
     @Autowired
     ContasService serviceContas;
-
-
     
     @PostMapping(
         value="/acoes/",
@@ -42,10 +40,16 @@ public class ObservadorDeAcoes {
         try {
             var acaoConvertida = acaoObservadaDto.converterParaModelo();
             var movimentacoesDeConta = service.aplicarRegrasDeNegociacao(acaoConvertida);
-            var contasMovimentadas = movimentacoesDeConta.stream().map(mov -> mov.getContaMovimentada());
-            contasMovimentadas.forEach(conta -> conta.registrarMovimentacoes(movimentacoesDeConta.toArray(MovimentacaoDeConta[]::new)));
-            serviceContas.salvar(contasMovimentadas.toArray(ContaPessoal[]::new));
-            return ok(movimentacoesDeConta);
+            var contasMovimentadas = movimentacoesDeConta.stream()
+                                                        .map(mov -> mov.getContaMovimentada())
+                                                        .toArray(ContaPessoal[]::new);
+
+            for(ContaPessoal c : contasMovimentadas) {
+                c.registrarMovimentacoes(movimentacoesDeConta.toArray(MovimentacaoDeConta[]::new));
+            }
+            
+            var movimentacoesSalvas = serviceContas.salvar(contasMovimentadas);
+            return ok(movimentacoesSalvas);
         } catch (Exception e) {
             return badRequest().body(e.getMessage());
         }

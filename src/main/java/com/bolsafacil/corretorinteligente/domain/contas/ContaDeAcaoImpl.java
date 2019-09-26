@@ -12,7 +12,6 @@ public class ContaDeAcaoImpl extends ContaBase implements ContaDeAcao {
     
     String empresaDaAcao;
 
-    long id;
 
     public ContaDeAcaoImpl(BigDecimal saldoInicial, String empresaDaAcao) {
         super(saldoInicial);
@@ -21,14 +20,13 @@ public class ContaDeAcaoImpl extends ContaBase implements ContaDeAcao {
     }
 
     public ContaDeAcaoImpl(BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva, String empresaDaAcao) {
-        super(saldoInicial, dataUltimaAtualizacaoSalva);
+        super(saldoInicial, dataUltimaAtualizacaoSalva, (long) 0);
         this.empresaDaAcao = empresaDaAcao;
     }
 
     public ContaDeAcaoImpl(BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva, String empresaDaAcao, long id) {
-        super(saldoInicial, dataUltimaAtualizacaoSalva);
+        super(saldoInicial, dataUltimaAtualizacaoSalva, id);
         this.empresaDaAcao = empresaDaAcao;
-        this.id = id;
     }
 
     /**
@@ -49,13 +47,13 @@ public class ContaDeAcaoImpl extends ContaBase implements ContaDeAcao {
     @Override
     protected void registrarMovimentacaoDeVenda(MovimentacaoDeConta movimentacao) {
         movimentacoesRegistradas.add(movimentacao);
-        saldoMovimentacoes = saldoMovimentacoes.subtract(movimentacao.getValorMovimentado());
+        saldoMovimentacoes = saldoMovimentacoes.subtract(movimentacao.getQuantidadeDeAcoesMovimentada().abs());
     }
 
     @Override
     protected void registrarMovimentacaoDeCompra(MovimentacaoDeConta movimentacao) {
         movimentacoesRegistradas.add(movimentacao);
-        saldoMovimentacoes = saldoMovimentacoes.add(movimentacao.getValorMovimentado());
+        saldoMovimentacoes = saldoMovimentacoes.add(movimentacao.getQuantidadeDeAcoesMovimentada());
     }
 
     

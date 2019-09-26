@@ -13,7 +13,7 @@ import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
  */
 public abstract class ContaBase implements Conta {
     long id;
-    LocalDateTime dataUltimaAtualizacaoSalva;
+    protected LocalDateTime dataUltimaAtualizacaoSalva;
 
     BigDecimal saldoDisponivelInicial;
 
@@ -21,13 +21,14 @@ public abstract class ContaBase implements Conta {
     protected List<MovimentacaoDeConta> movimentacoesRegistradas = new ArrayList<MovimentacaoDeConta>();
 
     public ContaBase(BigDecimal saldoInicial) {
-        this(saldoInicial, LocalDateTime.MIN);
+        this(saldoInicial, LocalDateTime.MIN, (long) 0);
     }
 
-    public ContaBase(BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva) {
+    public ContaBase(BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva, Long id) {
         saldoDisponivelInicial = saldoInicial;
         saldoMovimentacoes = new BigDecimal("0");
         this.dataUltimaAtualizacaoSalva = dataUltimaAtualizacaoSalva;
+        this.id = id;
     }
 
     @Override
@@ -80,6 +81,14 @@ public abstract class ContaBase implements Conta {
                                        .map(MovimentacaoDeConta::getDataMovimentacao)
                                        .max(Comparator.naturalOrder())
                                        .orElse(this.dataUltimaAtualizacaoSalva);
+    }
+
+
+    /**
+     * @param dataUltimaAtualizacaoSalva the dataUltimaAtualizacaoSalva to set
+     */
+    public void setDataUltimaAtualizacaoSalva(LocalDateTime dataUltimaAtualizacaoSalva) {
+        this.dataUltimaAtualizacaoSalva = dataUltimaAtualizacaoSalva;
     }
 
     /**

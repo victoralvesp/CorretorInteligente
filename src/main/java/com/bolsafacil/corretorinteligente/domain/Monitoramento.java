@@ -8,7 +8,7 @@ import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
  * Monitoramento
  */
 public class Monitoramento {
-
+    Long id;
     String empresa;    
     BigDecimal precoCompra;
     BigDecimal precoVenda;
@@ -32,7 +32,8 @@ public class Monitoramento {
     public Monitoramento(String empresa, BigDecimal precoCompra, BigDecimal precoVenda, long id) {
         this.empresa = empresa;
         this.precoCompra = precoCompra;
-        this.precoVenda = precoVenda; 
+        this.precoVenda = precoVenda;
+        this.id = id;
     }
     
     public Monitoramento(String empresa, BigDecimal precoCompra, BigDecimal precoVenda) {
@@ -40,7 +41,14 @@ public class Monitoramento {
         this.precoCompra = precoCompra;
         this.precoVenda = precoVenda; 
     }
+    
 
+    /**
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
     /**
      * @return a empresa da acao
      */

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import com.bolsafacil.corretorinteligente.domain.Monitoramento;
+import com.bolsafacil.corretorinteligente.fixtures.FixtureContas;
 import com.bolsafacil.corretorinteligente.fixtures.FixtureMonitoramentos;
 import com.bolsafacil.corretorinteligente.services.MonitoramentosService;
 import com.bolsafacil.corretorinteligente.services.implementacoes.MonitoramentosServiceImpl;
@@ -25,7 +26,8 @@ public class MonitoramentosServiceTests {
     public void setup() throws NotFoundException {
         fixtureDB = new FixtureMonitoramentos();
         var repositorio = fixtureDB.criarMockMonitoramentosRepository();
-        monitoramentosService = new MonitoramentosServiceImpl(repositorio);
+        var contasService = new FixtureContas().criarMockContasService();
+        monitoramentosService = new MonitoramentosServiceImpl(repositorio, contasService);
     }
 
     @Test
@@ -41,16 +43,16 @@ public class MonitoramentosServiceTests {
         assertTrue(monitoramentos != null && monitoramentos.size() > 0);
     }
     @Test
-    public void naoDeveManterDoisMonitoramentosDaMesmaEmpresa() {
+    public void naoDeveManterDoisMonitoramentosDaMesmaEmpresa() throws NotFoundException {
         //Arrange
         var empresa = "Intel";
-        var monitoramentoJaSalvo = fixtureDB.criarNovoMonitoramento(empresa);
+        var monitoramentoJaSalvo = fixtureDB.criarNovoMonitoramento(empresa, 1);
         int qtdeDeEntradas = 10;
         fixtureDB.preencherMonitoramentos(qtdeDeEntradas, monitoramentoJaSalvo);
-        var monitoramentoAInserir = fixtureDB.criarNovoMonitoramento(empresa);
+        var monitoramentoAInserir = fixtureDB.criarNovoMonitoramento(empresa, 1);
 
         //Act
-        monitoramentosService.salvarMonitoramento(monitoramentoAInserir);
+        monitoramentosService.salvarMonitoramento(monitoramentoAInserir, 1);
         var monitoramentosSalvos = monitoramentosService.listarMonitoramentos();
         //Assert
         assertThat(monitoramentosSalvos).extracting(Monitoramento::getEmpresa).containsOnlyOnce(empresa);

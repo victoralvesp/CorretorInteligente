@@ -14,7 +14,6 @@ import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
  */
 public class ContaPessoal extends ContaBase {
 
-    long id;
 
     String email;
     
@@ -28,14 +27,13 @@ public class ContaPessoal extends ContaBase {
         this(email, saldoInicial, dataUltimaAtualizacaoSalva, new ArrayList<ContaDeAcao>());
     }
     public ContaPessoal(String email, BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva, Collection<ContaDeAcao> contasDeAcao, long id) {
-        this(email, saldoInicial, dataUltimaAtualizacaoSalva, contasDeAcao);
-        this.id = id;
+        super(saldoInicial, dataUltimaAtualizacaoSalva, id);
+        this.contasDeAcao = contasDeAcao;
+        this.email = email;
     }
 
     public ContaPessoal(String email, BigDecimal saldoInicial, LocalDateTime dataUltimaAtualizacaoSalva, Collection<ContaDeAcao> contasDeAcao) {
-        super(saldoInicial, dataUltimaAtualizacaoSalva);
-        this.contasDeAcao = contasDeAcao;
-        this.email = email;
+        this(email, saldoInicial, dataUltimaAtualizacaoSalva, contasDeAcao, 0);
     }
 
 
@@ -60,7 +58,7 @@ public class ContaPessoal extends ContaBase {
     protected void registrarMovimentacaoDeCompra(MovimentacaoDeConta movimentacao) {
         movimentacoesRegistradas.add(movimentacao);
         registrarMovimentacaoEmContaDeAcao(movimentacao);
-        saldoMovimentacoes = saldoMovimentacoes.subtract(movimentacao.getValorMovimentado());
+        saldoMovimentacoes = saldoMovimentacoes.subtract(movimentacao.getValorMovimentado().abs()); 
     }
 
     private void registrarMovimentacaoEmContaDeAcao(MovimentacaoDeConta movimentacao) {
@@ -83,6 +81,7 @@ public class ContaPessoal extends ContaBase {
     public String getEmail() {
         return email;
     }
+
 
     /**
      * @return contas de ações pertencentes ao dono da conta pessoal

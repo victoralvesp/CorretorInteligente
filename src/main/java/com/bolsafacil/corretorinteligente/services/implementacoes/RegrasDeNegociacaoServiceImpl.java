@@ -79,6 +79,7 @@ public class RegrasDeNegociacaoServiceImpl implements RegrasDeNegociacaoService 
         }
         return regrasMonitoradas.stream()
                         .map(regra -> regra.aplicarRegra(acaoObservada))
+                        .filter(mov -> mov != null)
                         .collect(toList());
     }
 
