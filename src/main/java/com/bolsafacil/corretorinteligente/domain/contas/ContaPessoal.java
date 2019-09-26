@@ -73,6 +73,7 @@ public class ContaPessoal extends ContaBase {
         var empresaDaAcaoMovimentada = movimentacao.getEmpresaDaAcaoMovimentada();
         var novaConta = new ContaDeAcaoImpl(BigDecimal.ZERO, DefinicoesDoServidor.getDataAtual(), empresaDaAcaoMovimentada);
         novaConta.registrarMovimentacoes(movimentacao);
+        novaConta.setConta(this);
         contasDeAcao.add(novaConta);
     }
     /**

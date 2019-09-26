@@ -14,14 +14,14 @@ public class MovimentacaoDeVendaDeAcoes implements MovimentacaoDeConta {
 
     public MovimentacaoDeVendaDeAcoes(BigDecimal valorTotalVendido, LocalDateTime dataDaVenda,
             BigDecimal quantidadeDeAcoes, String empresa, ContaPessoal conta) {
-        this.valorTotalVendido = valorTotalVendido;
+        this.valorTotalMovimentado = valorTotalVendido;
         this.dataDaVenda = dataDaVenda;
         empresaDaAcaoMovimentada = empresa;
         quantidadeDeAcoesMovimentadas = quantidadeDeAcoes;
         this.conta = conta;
     }
 
-    private final BigDecimal valorTotalVendido;
+    private final BigDecimal valorTotalMovimentado;
     private final LocalDateTime dataDaVenda;
     private final String empresaDaAcaoMovimentada;
     private final BigDecimal quantidadeDeAcoesMovimentadas;
@@ -31,7 +31,7 @@ public class MovimentacaoDeVendaDeAcoes implements MovimentacaoDeConta {
 
     @Override
     public BigDecimal getValorMovimentado() {
-        return valorTotalVendido;
+        return valorTotalMovimentado;
     }
 
     @Override

@@ -12,7 +12,7 @@ import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
  */
 public class MovimentacaoDeCompraDeAcoes implements MovimentacaoDeConta {
 
-    private final BigDecimal valorComprado;
+    private final BigDecimal valorMovimentado;
     private final String empresaDasAcoes;
     private final BigDecimal quantidadeDeAcoesCompradas;
     private final LocalDateTime dataDaCompra;
@@ -24,14 +24,14 @@ public class MovimentacaoDeCompraDeAcoes implements MovimentacaoDeConta {
             BigDecimal quantidadeDeAcoesCompradas, String empresa, ContaPessoal conta) {
         this.quantidadeDeAcoesCompradas = quantidadeDeAcoesCompradas;
         this.dataDaCompra = dataDaCompra;
-        this.valorComprado = valorTotalMovimentado;
+        this.valorMovimentado = valorTotalMovimentado;
         this.empresaDasAcoes = empresa;
         this.conta = conta;
     }
 
     @Override
     public BigDecimal getValorMovimentado() {
-        return valorComprado;
+        return valorMovimentado;
     }
 
     @Override

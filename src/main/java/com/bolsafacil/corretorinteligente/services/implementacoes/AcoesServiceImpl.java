@@ -6,7 +6,7 @@ import java.util.stream.StreamSupport;
 
 import com.bolsafacil.corretorinteligente.DefinicoesDoServidor;
 import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
-import com.bolsafacil.corretorinteligente.repositorios.ObservacoesDeAcaoRepository;
+import com.bolsafacil.corretorinteligente.repositorios.AcoesObservadasRepository;
 import com.bolsafacil.corretorinteligente.services.AcoesService;
 
 import org.springframework.stereotype.Component;
@@ -19,38 +19,38 @@ import javassist.NotFoundException;
 @Component
 public class AcoesServiceImpl implements AcoesService {
 
-    private final ObservacoesDeAcaoRepository repository;
+    private final AcoesObservadasRepository repository;
 
-    public AcoesServiceImpl(ObservacoesDeAcaoRepository repository) {
+    public AcoesServiceImpl(AcoesObservadasRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public AcaoObservada registrarObservacaoDeAcoes(AcaoObservada monitoramento) {
+    public AcaoObservada salvar(AcaoObservada observacao) {
         var dataAtual = DefinicoesDoServidor.getDataAtual();
-        monitoramento.setData(dataAtual);
+        observacao.setData(dataAtual);
 
-        var monitoramentoSalvo = repository.save(monitoramento);
+        var observacaoSalvo = repository.save(observacao);
 
-        return monitoramentoSalvo;
+        return observacaoSalvo;
     }
 
     @Override
     public Collection<AcaoObservada> listarObservacoesRealizadas() {
         
-        var monitoramentosSalvos = repository.findAll();
+        var observacoesSalvas = repository.findAll();
 
-        return StreamSupport.stream(monitoramentosSalvos.spliterator(), false)
+        return StreamSupport.stream(observacoesSalvas.spliterator(), false)
                             .collect(Collectors.toList());
     }
 
     @Override
     public AcaoObservada buscar(long id) throws NotFoundException{
-        var monitoramentoBuscado = repository.findById(id);
+        var observacao = repository.findById(id);
 
-        if(!monitoramentoBuscado.isPresent())
+        if(!observacao.isPresent())
             throw new NotFoundException("Não foi possível encontrar o monitoramento buscado");
 
-        return monitoramentoBuscado.get();
+        return observacao.get();
     }
 }

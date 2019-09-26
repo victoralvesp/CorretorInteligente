@@ -3,10 +3,11 @@ package com.bolsafacil.corretorinteligente.entities;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,13 +29,14 @@ import com.bolsafacil.corretorinteligente.domain.movimentacoes.TipoMovimentacao;
 public class MovimentacaoDataEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     long id;
 
     @ManyToOne
     @JoinColumn(name = "id_conta")
     ContaDataEntity conta;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_gatilho_observacao")
     AcaoObservada observacaoGatilho;
 
@@ -51,7 +53,7 @@ public class MovimentacaoDataEntity {
     LocalDateTime dataMovimentacao;
     
 
-    public MovimentacaoDataEntity converterDe(MovimentacaoDeConta modelo) {
+    public static MovimentacaoDataEntity converterDe(MovimentacaoDeConta modelo, AcaoObservada observacaoGatilho) {
         if(modelo == null) {
             return null;
         }
@@ -60,9 +62,10 @@ public class MovimentacaoDataEntity {
         entity.dataMovimentacao = modelo.getDataMovimentacao();
         entity.empresa = modelo.getEmpresaDaAcaoMovimentada();
         entity.id = modelo.getId();
-
+        entity.valorMovimentado = modelo.getValorMovimentado();
+        entity.quantidadeDeAcoesMovimentada = modelo.getQuantidadeDeAcoesMovimentada();
         entity.conta = ContaDataEntity.converterDe(modelo.getContaMovimentada());
-        entity.observacaoGatilho = modelo.getAcaoObservada();
+        entity.observacaoGatilho = observacaoGatilho;
 
         return entity;
     }

@@ -4,7 +4,6 @@ import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
 import com.bolsafacil.corretorinteligente.controllers.dtos.ContaDto;
-import com.bolsafacil.corretorinteligente.repositorios.ContasRepository;
 import com.bolsafacil.corretorinteligente.services.ContasService;
 
 import org.springframework.beans.factory.annotation.Autowired;

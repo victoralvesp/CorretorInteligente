@@ -11,8 +11,20 @@ import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
 public class ContaDeAcaoImpl extends ContaBase implements ContaDeAcao {
     
     String empresaDaAcao;
+    ContaPessoal conta;
 
-
+    /**
+     * @return the conta
+     */
+    public ContaPessoal getConta() {
+        return conta;
+    }
+    /**
+     * @param conta the conta to set
+     */
+    public void setConta(ContaPessoal conta) {
+        this.conta = conta;
+    }
     public ContaDeAcaoImpl(BigDecimal saldoInicial, String empresaDaAcao) {
         super(saldoInicial);
         this.empresaDaAcao = empresaDaAcao;

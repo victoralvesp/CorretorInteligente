@@ -41,6 +41,7 @@ public class ContasTests {
         assertThat(conta.getSaldoAtual()).isEqualByComparingTo("6271.00");
     }
 
+
     @Test
     public void dataDaUltimaAtualizacaoDaContaDeveSerAUltimaMovimentacaoRegistrada() {
         //Arrange

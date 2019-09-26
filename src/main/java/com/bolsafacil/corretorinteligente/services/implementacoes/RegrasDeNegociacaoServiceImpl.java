@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 /**
  * RegrasDeNegociacaoService
  */
-@Component
 public class RegrasDeNegociacaoServiceImpl implements RegrasDeNegociacaoService {
 
     private final MonitoramentosService serviceMonitoramentos;

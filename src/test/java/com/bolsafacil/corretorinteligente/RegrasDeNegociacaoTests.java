@@ -60,6 +60,21 @@ public class RegrasDeNegociacaoTests {
         var message = "Foi gerada movimentacao para empresa errada";
         assertNull(message, movimentacaoGerada);
     }
+    
+    @Test
+    public void naoDeveDeixarSaldoDeContaNegativo() {
+        String empresaMonitorada = "Intel";
+        var fixtureRegra = new FixtureRegras();
+        var saldoDisponivel = "0.5";
+        var regraDeCompraExemplo = fixtureRegra.criarRegraDeCompra(empresaMonitorada, saldoDisponivel);
+        var acaoMonitorada = criarAcaoObservada(empresaMonitorada);
+
+        //Act
+        var movimentacaoGerada = regraDeCompraExemplo.aplicarRegra(acaoMonitorada);
+
+        assertTrue(movimentacaoGerada == null 
+                || movimentacaoGerada.getValorMovimentado().compareTo(new BigDecimal(saldoDisponivel)) <= 0);
+    }
 
     
     @Test

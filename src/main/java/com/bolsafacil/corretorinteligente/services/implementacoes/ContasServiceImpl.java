@@ -8,6 +8,7 @@ import java.util.stream.StreamSupport;
 import com.bolsafacil.corretorinteligente.DefinicoesDoServidor;
 import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
 import com.bolsafacil.corretorinteligente.entities.ContaDataEntity;
+import com.bolsafacil.corretorinteligente.entities.ContaDeAcaoDataEntity;
 import com.bolsafacil.corretorinteligente.repositorios.ContasDataRepository;
 import com.bolsafacil.corretorinteligente.services.ContasService;
 
@@ -48,7 +49,12 @@ public class ContasServiceImpl implements ContasService {
 	@Override
 	public Collection<ContaPessoal> salvar(ContaPessoal... contas) {
         var contasEntity = Stream.of(contas).map(conta -> ContaDataEntity.converterDe(conta))
-                                       .collect(Collectors.toList()) ;
+                                       .collect(Collectors.toList());
+        
+        // var contasDeAcaoEntity = Stream.of(contasEntity).flatMap(conta -> conta.getContasDeAcao().stream())
+        //                                 .map(contaAcao -> ContaDeAcaoDataEntity.converterDe(contaAcao))
+        //                                 .collect(Collectors.toList());
+        // repoContasAcao.saveAll(contasDeAcaoEntity);
         var contasEntitySalvas = repoContas.saveAll(contasEntity);
         return StreamSupport.stream(contasEntitySalvas.spliterator(), false)
                         .map(ent -> ent.converterParaModelo())

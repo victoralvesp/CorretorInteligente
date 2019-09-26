@@ -3,14 +3,11 @@ package com.bolsafacil.corretorinteligente.entities;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.bolsafacil.corretorinteligente.domain.contas.ContaDeAcao;
@@ -31,9 +28,8 @@ public class ContaDeAcaoDataEntity {
     @Column(nullable = false, name = "nome_empresa_acao")
     String empresa;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(nullable = false, name = "id_conta")
-    ContaDataEntity conta;
+    @Column(nullable = false, name = "id_conta")
+    long idConta;
 
     
     @Column(nullable = false, name = "data_ultima_atualizacao")
@@ -43,7 +39,20 @@ public class ContaDeAcaoDataEntity {
     BigDecimal quantidadeDisponivel;
 
     public ContaDeAcao converterParaModelo() {
-        return new ContaDeAcaoImpl(quantidadeDisponivel, dataUltimaAtualizacao, empresa, id);
+        ContaDeAcaoImpl contaDeAcaoImpl = new ContaDeAcaoImpl(quantidadeDisponivel, dataUltimaAtualizacao, empresa, id);
+        
+        return contaDeAcaoImpl;
+    }
+
+    public static ContaDeAcaoDataEntity converterDe(ContaDeAcao contaAcao, long idConta) {
+        var contaEntity = new ContaDeAcaoDataEntity();
+        contaEntity.dataUltimaAtualizacao = contaAcao.getDataUltimaAtualizacao();
+        contaEntity.empresa = contaAcao.getEmpresaDaAcao();
+        contaEntity.id = contaAcao.getId();
+        contaEntity.quantidadeDisponivel = contaAcao.getSaldoAtual();
+        contaEntity.idConta = idConta;
+
+        return contaEntity;
     }
 
     public static ContaDeAcaoDataEntity converterDe(ContaDeAcao conta) {
@@ -55,5 +64,4 @@ public class ContaDeAcaoDataEntity {
 
         return contaEntity;
     }
-
 }

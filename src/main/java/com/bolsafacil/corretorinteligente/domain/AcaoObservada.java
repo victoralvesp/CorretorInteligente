@@ -41,7 +41,7 @@ public class AcaoObservada {
     /**
      * @return o id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
     /**

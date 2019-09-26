@@ -34,7 +34,7 @@ public class MonitoramentosDataEntity {
     @Column(nullable = false, name = "preco_venda")
     BigDecimal precoVenda;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_conta")
     ContaDataEntity conta;
 

@@ -13,7 +13,7 @@ import java.util.Random;
 import java.util.Set;
 
 import com.bolsafacil.corretorinteligente.domain.AcaoObservada;
-import com.bolsafacil.corretorinteligente.repositorios.ObservacoesDeAcaoRepository;
+import com.bolsafacil.corretorinteligente.repositorios.AcoesObservadasRepository;
 
 import org.mockito.Mockito;
 
@@ -57,8 +57,8 @@ public class FixtureObservacoes {
         observacoesSalvas = new HashSet<>(observacoes);
     }
 
-    public ObservacoesDeAcaoRepository criarMockMonitoramentosRepository() {
-        var repoMock = Mockito.mock(ObservacoesDeAcaoRepository.class);
+    public AcoesObservadasRepository criarMockMonitoramentosRepository() {
+        var repoMock = Mockito.mock(AcoesObservadasRepository.class);
         when(repoMock.save(any(AcaoObservada.class))).then(returnsFirstArg());
         when(repoMock.findAll()).thenAnswer(i -> getObservacoesSalvas());
         when(repoMock.findById(any(Long.class))).thenAnswer(an -> {

@@ -40,8 +40,13 @@ public class FixtureRegras {
     }
 
     public RegraDeNegociacao criarRegraDeCompra(String empresa) {
+        var saldoDisponivel = "10000.00";
+        return criarRegraDeCompra(empresa, saldoDisponivel);
+    }
+    
+    public RegraDeNegociacao criarRegraDeCompra(String empresa, String saldo) {
+        var saldoDisponivel = new BigDecimal(saldo);
         var monitoramentoDoExemplo = criarMonitoramento(empresa);
-        var saldoDisponivel = new BigDecimal("10000.00");
         var regraDeCompraExemplo = new RegraDeCompra(monitoramentoDoExemplo, saldoDisponivel);
         return regraDeCompraExemplo;
     }

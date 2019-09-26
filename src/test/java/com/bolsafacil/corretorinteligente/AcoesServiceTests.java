@@ -32,7 +32,7 @@ public class AcoesServiceTests {
         var monitoramento = fixtureDB.criarNovaObservacao();
         var dataAtual = LocalDateTime.now();
         // Act
-        var monitoramentoRegistrado = monitorService.registrarObservacaoDeAcoes(monitoramento);
+        var monitoramentoRegistrado = monitorService.salvar(monitoramento);
         // Assert
         assertTrue("message", monitoramentoRegistrado.getData().compareTo(dataAtual) >= 0);
     }

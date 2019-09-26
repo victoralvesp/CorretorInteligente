@@ -43,8 +43,8 @@ public class ContaDataEntity {
     @Column(nullable = false, name = "saldo_disponivel")
     BigDecimal saldoDisponivel;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, insertable = false, updatable = false)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_conta")
     Set<ContaDeAcaoDataEntity> contasDeAcao;
 
 
@@ -63,13 +63,13 @@ public class ContaDataEntity {
         var contasDeAcaoMaybe = Optional.of(conta.getContasDeAcao());
 
         var contaEntity = new ContaDataEntity();
+        contaEntity.id = conta.getId();
         contasDeAcaoMaybe.ifPresentOrElse(contas -> {
-                contaEntity.contasDeAcao = contas.stream().map(contaDeAcao -> ContaDeAcaoDataEntity.converterDe(contaDeAcao))
+                contaEntity.contasDeAcao = contas.stream().map(contaDeAcao -> ContaDeAcaoDataEntity.converterDe(contaDeAcao, contaEntity.id))
                                                 .collect(Collectors.toSet());
                                                 
             }, () -> contaEntity.contasDeAcao = new HashSet<ContaDeAcaoDataEntity>() );
 
-        contaEntity.id = conta.getId();
         contaEntity.dataUltimaAtualizacao = conta.getDataUltimaAtualizacao();
         contaEntity.email = conta.getEmail();
         contaEntity.saldoDisponivel = conta.getSaldoAtual();
