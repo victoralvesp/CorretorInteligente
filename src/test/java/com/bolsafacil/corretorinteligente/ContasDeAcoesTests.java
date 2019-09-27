@@ -88,7 +88,7 @@ public class ContasDeAcoesTests {
         var fixtureDB = new FixtureContas();
         var fixtureRegras = new FixtureRegras();
         var conta = fixtureDB.criarContaPessoalPreenchida(contaDeAcao);
-        var regraVenda = fixtureRegras.criarRegraDeVenda(empresa, new BigDecimal(5), conta);
+        var regraVenda = fixtureRegras.criarRegraDeVenda(empresa, new BigDecimal(5), new BigDecimal("1200") ,conta);
         var acaoObservada = new AcaoObservada(empresa, BigDecimal.TEN, BigDecimal.TEN);
         //Act
         var movimentacaoConta = regraVenda.aplicarRegra(acaoObservada);

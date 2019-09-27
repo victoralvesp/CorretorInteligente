@@ -32,7 +32,7 @@ public class RegraDeVenda implements RegraDeNegociacao {
 
         String empresaDaAcao = acaoObservada.getEmpresa();
         var empresaObservaIgualAMonitorada = monitoramentoDaRegra.getEmpresa().equals(empresaDaAcao);
-        if (empresaObservaIgualAMonitorada && estaAcimaDoDesejado(precoVendaObservado)) {
+        if (empresaObservaIgualAMonitorada && estaAcimaDoDesejado(precoVendaObservado) && temSaldo()) {
             var valorTotalVendido = quantidadeDeAcoesDisponivel.multiply(precoVendaObservado).setScale(2, modoArredondamento);
             var dataDaVenda = DefinicoesDoServidor.getDataAtual();
             var quantidadeMovimentada = quantidadeDeAcoesDisponivel.multiply(new BigDecimal(-1));
@@ -45,6 +45,11 @@ public class RegraDeVenda implements RegraDeNegociacao {
         }
 
     }
+    
+    private boolean temSaldo() {
+        return quantidadeDeAcoesDisponivel.compareTo(BigDecimal.ZERO) > 0;
+    }
+
     private boolean estaAcimaDoDesejado(BigDecimal precoVendaObservado) {
         var precoDesejado = monitoramentoDaRegra.getPrecoVenda();
         return precoVendaObservado.compareTo(precoDesejado) >= 0;

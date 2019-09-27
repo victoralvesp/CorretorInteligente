@@ -3,7 +3,7 @@ package com.bolsafacil.corretorinteligente.controllers;
 import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
-import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -16,7 +16,6 @@ import com.bolsafacil.corretorinteligente.services.AcoesService;
 import com.bolsafacil.corretorinteligente.services.ContasService;
 import com.bolsafacil.corretorinteligente.services.MonitoramentosService;
 import com.bolsafacil.corretorinteligente.services.MovimentosDeContaService;
-import com.bolsafacil.corretorinteligente.services.RegrasDeNegociacaoService;
 import com.bolsafacil.corretorinteligente.services.implementacoes.RegrasDeNegociacaoServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,12 +49,17 @@ public class ObservadorDeAcoes {
             var serviceRegras = new RegrasDeNegociacaoServiceImpl(serviceMonitoramentos);
             var acaoConvertida = acaoObservadaDto.converterParaModelo();
             var movimentacoesDeConta = serviceRegras.aplicarRegrasDeNegociacao(acaoConvertida);
-            var contasMovimentadas = movimentacoesDeConta.stream().map(mov -> mov.getContaMovimentada())
-                    .toArray(ContaPessoal[]::new);
-
-            for (ContaPessoal c : contasMovimentadas) {
-                c.registrarMovimentacoes(movimentacoesDeConta.toArray(MovimentacaoDeConta[]::new));
+            
+            for (MovimentacaoDeConta mov : movimentacoesDeConta) {
+                var conta = mov.getContaMovimentada();
+                conta.registrarMovimentacoes(mov);
             }
+            var contasMovimentadas = movimentacoesDeConta.stream()
+                                            .map(mov -> mov.getContaMovimentada())
+                                            .distinct()
+                                            .toArray(ContaPessoal[]::new);
+
+
             var acaoSalva = serviceAcoes.salvar(acaoConvertida);
             serviceMovimentos.salvar(movimentacoesDeConta, acaoSalva);
             serviceContas.salvar(contasMovimentadas);
@@ -66,27 +70,34 @@ public class ObservadorDeAcoes {
         }
     }
 
-    private Collection<MovimentacaoVM> ConverterParaViewModel(
+    private MovimentacoesVM ConverterParaViewModel(
             Collection<? extends MovimentacaoDeConta> movimentacoesDeConta) {
-        return movimentacoesDeConta.stream().map(mov -> new MovimentacaoVM(mov)).collect(Collectors.toList());
+        var movimentacoesVM = movimentacoesDeConta.stream().map(mov -> new MovimentacaoVM(mov)).collect(Collectors.toList());
+        return new MovimentacoesVM(movimentacoesVM);
+    }
+    private class MovimentacoesVM {
+        public Collection<MovimentacaoVM> movimentacoes;
+        public MovimentacoesVM(Collection<MovimentacaoVM> movimentacoesVM) {
+            this.movimentacoes = movimentacoesVM;
+        }
     }
 
     private class MovimentacaoVM {
 
         public TipoMovimentacao tipo;
-        public LocalDateTime data;
-        public BigDecimal quantidadeDeAcoes;
-        public BigDecimal valorMovimentado;
-        public long idConta;
+        public String data;
+        public String quantidadeDeAcoes;
+        public String valorMovimentado;
+        public String idConta;
         public String empresa;
 
         public MovimentacaoVM(MovimentacaoDeConta mov) {
             tipo = mov.getTipoMovimentacao();
-            idConta = mov.getContaMovimentada().getId();
-            valorMovimentado = mov.getValorMovimentado();
-            quantidadeDeAcoes = mov.getQuantidadeDeAcoesMovimentada();
+            idConta = String.valueOf(mov.getContaMovimentada().getId());
+            valorMovimentado = mov.getValorMovimentado().toString();
+            quantidadeDeAcoes = mov.getQuantidadeDeAcoesMovimentada().toString();
             empresa = mov.getEmpresaDaAcaoMovimentada();
-            data = mov.getDataMovimentacao();
+            data = mov.getDataMovimentacao().toString();
         }
 
     }

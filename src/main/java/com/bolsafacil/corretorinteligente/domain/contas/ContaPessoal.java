@@ -13,7 +13,7 @@ import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
  * ContaPessoal
  */
 public class ContaPessoal extends ContaBase {
-
+    
 
     String email;
     
@@ -105,6 +105,6 @@ public class ContaPessoal extends ContaBase {
             return false;
 
         var other = (ContaPessoal) obj;
-        return email.equals(other.getEmail());
+        return getId() == other.getId();
     }
 }
