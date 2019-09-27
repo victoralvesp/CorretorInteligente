@@ -36,7 +36,7 @@ public class MovimentacaoDataEntity {
     @JoinColumn(name = "id_conta")
     ContaDataEntity conta;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_gatilho_observacao")
     AcaoObservada observacaoGatilho;
 

@@ -36,7 +36,8 @@ public class AcaoObservada {
         this.precoCompra = precoCompra;
         this.precoVenda = precoVenda; 
     }
-
+    public AcaoObservada() {
+    }
     
     /**
      * @return o id

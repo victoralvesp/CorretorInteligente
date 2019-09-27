@@ -1,17 +1,12 @@
 package com.bolsafacil.corretorinteligente.controllers;
 
+import static com.bolsafacil.corretorinteligente.controllers.vms.MovimentacoesVM.converterParaViewModel;
 import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
-
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 import com.bolsafacil.corretorinteligente.controllers.dtos.AcaoObservadaDto;
 import com.bolsafacil.corretorinteligente.domain.MovimentacaoDeConta;
 import com.bolsafacil.corretorinteligente.domain.contas.ContaPessoal;
-import com.bolsafacil.corretorinteligente.domain.movimentacoes.TipoMovimentacao;
 import com.bolsafacil.corretorinteligente.services.AcoesService;
 import com.bolsafacil.corretorinteligente.services.ContasService;
 import com.bolsafacil.corretorinteligente.services.MonitoramentosService;
@@ -63,43 +58,15 @@ public class ObservadorDeAcoes {
             var acaoSalva = serviceAcoes.salvar(acaoConvertida);
             serviceMovimentos.salvar(movimentacoesDeConta, acaoSalva);
             serviceContas.salvar(contasMovimentadas);
-            var movimentacoesVM = ConverterParaViewModel(movimentacoesDeConta);
+            var movimentacoesVM = converterParaViewModel(movimentacoesDeConta);
             return ok(movimentacoesVM);
         } catch (Exception e) {
             return badRequest().body(e.getMessage());
         }
     }
 
-    private MovimentacoesVM ConverterParaViewModel(
-            Collection<? extends MovimentacaoDeConta> movimentacoesDeConta) {
-        var movimentacoesVM = movimentacoesDeConta.stream().map(mov -> new MovimentacaoVM(mov)).collect(Collectors.toList());
-        return new MovimentacoesVM(movimentacoesVM);
-    }
-    private class MovimentacoesVM {
-        public Collection<MovimentacaoVM> movimentacoes;
-        public MovimentacoesVM(Collection<MovimentacaoVM> movimentacoesVM) {
-            this.movimentacoes = movimentacoesVM;
-        }
-    }
+    
 
-    private class MovimentacaoVM {
 
-        public TipoMovimentacao tipo;
-        public String data;
-        public String quantidadeDeAcoes;
-        public String valorMovimentado;
-        public String idConta;
-        public String empresa;
-
-        public MovimentacaoVM(MovimentacaoDeConta mov) {
-            tipo = mov.getTipoMovimentacao();
-            idConta = String.valueOf(mov.getContaMovimentada().getId());
-            valorMovimentado = mov.getValorMovimentado().toString();
-            quantidadeDeAcoes = mov.getQuantidadeDeAcoesMovimentada().toString();
-            empresa = mov.getEmpresaDaAcaoMovimentada();
-            data = mov.getDataMovimentacao().toString();
-        }
-
-    }
 
 }
