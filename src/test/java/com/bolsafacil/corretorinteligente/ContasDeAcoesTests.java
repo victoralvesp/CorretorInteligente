@@ -19,7 +19,7 @@ import org.junit.Test;
 public class ContasDeAcoesTests {
 
     @Test
-    public void deveSomarValorDeMovimentacaoDeVendaASaldoDisponivel() {
+    public void deveSomarValorDeMovimentacaoDeCompraASaldoDisponivel() {
         // Arrange
         String empresa = "Intel";
         ContaDeAcao conta = new ContaDeAcaoImpl(new BigDecimal("2500.00"), empresa); 
@@ -30,10 +30,10 @@ public class ContasDeAcoesTests {
         conta.registrarMovimentacoes(movimentacao1, movimentacao2);
 
         // Assert
-        assertThat(conta.getSaldoAtual()).isEqualByComparingTo("6271.00");
+        assertThat(conta.getSaldoAtual()).isEqualByComparingTo("2520.00");
     }
     @Test
-    public void deveSubtrairValorDeMovimentacaoDeCompraASaldoDisponivel() {
+    public void deveSubtrairValorDeMovimentacaoDeVendaASaldoDisponivel() {
         //Arrange
         String empresa = "Intel";
         ContaDeAcao conta = new ContaDeAcaoImpl(new BigDecimal("10000.00"), empresa);
@@ -44,7 +44,7 @@ public class ContasDeAcoesTests {
         conta.registrarMovimentacoes(movimentacao1, movimentacao2);
 
         // Assert
-        assertThat(conta.getSaldoAtual()).isEqualByComparingTo("6229.00");
+        assertThat(conta.getSaldoAtual()).isEqualByComparingTo("9980.00");
     }
     @Test
     public void naoDeveAlterarSaldoComMovimentacoesDeAcoesDeOutrasEmpresas() {

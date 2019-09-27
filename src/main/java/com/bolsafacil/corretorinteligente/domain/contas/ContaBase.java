@@ -55,6 +55,7 @@ public abstract class ContaBase implements Conta {
                         break;
                         case VENDA:
                         registrarMovimentacaoDeVenda(movimentacao);
+                        break;
                         default:
                         registrarMovimentacaoSemAlterarSaldo(movimentacao);
                         break;
