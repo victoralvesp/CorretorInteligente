@@ -45,6 +45,7 @@ public class MonitoramentosDataEntity {
         var contaConvertida = conta.converterParaModelo();
         var monitoramento = new Monitoramento(empresa, precoCompra, precoVenda, id);
         monitoramento.setConta(contaConvertida);
+        monitoramento.setExcluido(excluido);
         return monitoramento;
     }
 

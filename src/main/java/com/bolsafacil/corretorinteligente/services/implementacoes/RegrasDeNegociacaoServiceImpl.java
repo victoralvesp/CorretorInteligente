@@ -16,8 +16,6 @@ import com.bolsafacil.corretorinteligente.domain.regrasdenegociacao.RegraDeVenda
 import com.bolsafacil.corretorinteligente.services.MonitoramentosService;
 import com.bolsafacil.corretorinteligente.services.RegrasDeNegociacaoService;
 
-import org.springframework.stereotype.Component;
-
 /**
  * RegrasDeNegociacaoService
  */

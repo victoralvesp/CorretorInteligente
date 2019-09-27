@@ -38,7 +38,7 @@ public class RegraDeCompra implements RegraDeNegociacao {
 
         String empresaDaAcao = acaoObservada.getEmpresa();
         var empresaObservaIgualAMonitorada = monitoramentoDaRegra.getEmpresa().equals(empresaDaAcao);
-        if (empresaObservaIgualAMonitorada && estaAbaixoDoDesejado(precoCompraObservado)) {
+        if (empresaObservaIgualAMonitorada && estaAbaixoDoDesejado(precoCompraObservado) && contaTemSaldo(precoCompraObservado)) {
             var quantidadeDeAcoesAComprar = saldoDisponivel.divide(precoCompraObservado, modoArredondamento).setScale(2, modoArredondamento);
             var dataDaCompra = DefinicoesDoServidor.getDataAtual();
             var valorTotalMovimentado = quantidadeDeAcoesAComprar.multiply(precoCompraObservado)
@@ -53,6 +53,11 @@ public class RegraDeCompra implements RegraDeNegociacao {
             return null;
         }
 
+    }
+
+    private boolean contaTemSaldo(BigDecimal precoCompraObservado) {
+        var possivelQuantidadeAComprar = saldoDisponivel.divide(precoCompraObservado, modoArredondamento).setScale(2, modoArredondamento);
+        return possivelQuantidadeAComprar.compareTo(BigDecimal.ZERO) > 0;
     }
 
     private boolean estaAbaixoDoDesejado(BigDecimal precoCompraObservado) {
